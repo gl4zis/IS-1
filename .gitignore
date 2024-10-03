@@ -1,0 +1,8 @@
+.idea
+
+server/server.iml
+server/.gradle
+server/gradle
+server/build
+
+IS-lab1.iml
