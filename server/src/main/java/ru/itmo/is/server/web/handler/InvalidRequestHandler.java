@@ -9,6 +9,8 @@ import ru.itmo.is.server.exception.InvalidRequestException;
 public class InvalidRequestHandler implements ExceptionMapper<InvalidRequestException> {
     @Override
     public Response toResponse(InvalidRequestException exception) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).build();
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity(exception.getMessage())
+                .build();
     }
 }

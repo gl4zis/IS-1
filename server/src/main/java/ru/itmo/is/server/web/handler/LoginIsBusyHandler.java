@@ -10,6 +10,8 @@ public class LoginIsBusyHandler implements ExceptionMapper<LoginIsBusyException>
 
     @Override
     public Response toResponse(LoginIsBusyException exception) {
-        return Response.status(Response.Status.CONFLICT).entity(exception.getMessage()).build();
+        return Response.status(Response.Status.CONFLICT)
+                .entity(exception.getMessage())
+                .build();
     }
 }
