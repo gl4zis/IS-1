@@ -3,6 +3,7 @@ package ru.itmo.is.server.dao;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.entity.Person;
 
 import java.util.List;
@@ -33,5 +34,21 @@ public class PersonDao {
 
     public void update(Person person) {
         em.merge(person);
+    }
+
+    public long countPeopleByWeight(long weight) {
+        return em.createQuery("SELECT COUNT(p) FROM Person p WHERE p.weight = :weight", Long.class)
+                .setParameter("weight", weight)
+                .getSingleResult();
+    }
+
+    public long countPeopleByEyeColor(Color eyeColor) {
+        return em.createQuery("SELECT COUNT(p) FROM Person p WHERE p.eyeColor = :eyeColor", Long.class)
+                .setParameter("eyeColor", eyeColor)
+                .getSingleResult();
+    }
+
+    public long countAllPeople() {
+        return em.createQuery("SELECT COUNT(p) FROM Person p", Long.class).getSingleResult();
     }
 }

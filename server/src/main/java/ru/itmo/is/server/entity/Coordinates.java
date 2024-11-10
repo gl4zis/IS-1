@@ -15,7 +15,7 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class Coordinates extends AbstractEntity {
+public class Coordinates extends AbstractEntity implements Comparable<Coordinates> {
 
     @Column(nullable = false)
     private long x;
@@ -23,4 +23,13 @@ public class Coordinates extends AbstractEntity {
     @NotNull
     @Min(-725)
     private Double y; //Значение поля должно быть больше -725, Поле не может быть null
+
+    @Override
+    public int compareTo(Coordinates o) {
+        return Double.compare(zeroDistance(), o.zeroDistance());
+    }
+
+    private double zeroDistance() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
 }

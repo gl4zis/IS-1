@@ -5,6 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.PersonRequest;
+import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
 
 @Path("/person")
@@ -43,5 +44,34 @@ public class PersonController {
     public Response deletePerson(@PathParam("id") Integer id) {
         personService.delete(id);
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/height-sum")
+    public Response getHeightSum() {
+        return Response.ok(personService.getAllHeightSum()).build();
+    }
+
+    @GET
+    @Path("/max-by-coords")
+    public Response getMaxByCoords() {
+        return Response.ok(personService.getPersonWithMaxCoords()).build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response countPeople(@QueryParam("weight") Long weight, @QueryParam("eyeColor") Color eyeColor) {
+        if ((weight == null && eyeColor == null) || (weight != null && eyeColor != null)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        if (weight !=null) return Response.ok(personService.countPeopleByWeight(weight)).build();
+        else return Response.ok(personService.countPeopleByEyeColor(eyeColor)).build();
+    }
+
+    @GET
+    @Path("/proportion")
+    public Response getProportion(@QueryParam("eyeColor") Color eyeColor) {
+        return Response.ok(personService.getPeopleProportionByEyeColor(eyeColor)).build();
     }
 }

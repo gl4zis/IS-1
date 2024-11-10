@@ -11,6 +11,7 @@ import ru.itmo.is.server.dao.LocationDao;
 import ru.itmo.is.server.dao.PersonDao;
 import ru.itmo.is.server.dto.request.PersonRequest;
 import ru.itmo.is.server.dto.response.PersonResponse;
+import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.entity.Person;
 
 import java.util.List;
@@ -58,6 +59,40 @@ public class PersonService {
         person.setCreatedBy(personO.get().getCreatedBy());
         person.setCreatedAt(personO.get().getCreatedAt());
         personDao.update(person);
+    }
+
+    public double getAllHeightSum() {
+        double sum = 0;
+        var people = personDao.getAll();
+        for (Person p : people) {
+            sum += p.getHeight();
+        }
+        return sum;
+    }
+
+    public PersonResponse getPersonWithMaxCoords() {
+        var people = personDao.getAll();
+        if (people.isEmpty()) throw new NotFoundException("Zero people saved");
+        var maxPersonIdx = 0;
+        var maxCoord = people.get(maxPersonIdx).getCoordinates();
+        for (Person p : people) {
+            if (p.getCoordinates().compareTo(maxCoord) > 0) {
+                maxCoord = p.getCoordinates();
+            }
+        }
+        return mapper.map(people.get(maxPersonIdx), PersonResponse.class);
+    }
+
+    public long countPeopleByWeight(long weight) {
+        return personDao.countPeopleByWeight(weight);
+    }
+
+    public long countPeopleByEyeColor(Color eyeColor) {
+        return personDao.countPeopleByEyeColor(eyeColor);
+    }
+
+    public float getPeopleProportionByEyeColor(Color eyeColor) {
+        return (float) personDao.countPeopleByEyeColor(eyeColor) / personDao.countAllPeople();
     }
     
     private Person mapPerson(PersonRequest req) {
