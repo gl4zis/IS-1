@@ -1,15 +1,13 @@
 package ru.itmo.is.server.controller;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.LoginRequest;
 import ru.itmo.is.server.dto.request.RegisterRequest;
 import ru.itmo.is.server.service.AuthService;
+import ru.itmo.is.server.web.ActiveUserHolder;
 
 @Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -17,6 +15,14 @@ import ru.itmo.is.server.service.AuthService;
 public class AuthController {
     @Inject
     private AuthService authService;
+    @Inject
+    private ActiveUserHolder activeUser;
+
+    @GET
+    @Path("/whoami")
+    public Response whoami() {
+        return Response.ok(activeUser.getUser().getLogin()).build();
+    }
 
     @POST
     @Path("/register")

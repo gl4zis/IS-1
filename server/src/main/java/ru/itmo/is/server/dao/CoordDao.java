@@ -1,10 +1,8 @@
 package ru.itmo.is.server.dao;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.modelmapper.ModelMapper;
 import ru.itmo.is.server.entity.Coordinates;
 
 import java.util.List;
@@ -14,8 +12,6 @@ import java.util.Optional;
 public class CoordDao {
     @PersistenceContext
     private EntityManager em;
-    @Inject
-    private ModelMapper mapper;
 
     public List<Coordinates> getAll() {
         return em.createQuery("FROM Coordinates", Coordinates.class)

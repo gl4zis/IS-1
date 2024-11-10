@@ -1,16 +1,15 @@
 package ru.itmo.is.server.dto.request;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import ru.itmo.is.server.dto.PersonDto;
 
 @Getter
 @Setter
-public class CoordRequest {
-    private long x;
+public class PersonRequest extends PersonDto {
     @NotNull
-    @Min(-725)
-    private Double y;
+    private Integer coordId;
+    private Integer locationId;
     private boolean adminAccess;
 }

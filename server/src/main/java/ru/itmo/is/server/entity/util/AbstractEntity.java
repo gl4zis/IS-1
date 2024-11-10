@@ -1,8 +1,10 @@
 package ru.itmo.is.server.entity.util;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ru.itmo.is.server.entity.security.User;
 
 import java.time.LocalDateTime;
 
@@ -10,20 +12,27 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EntityListeners(AbstractEntityListener.class)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
-    @Column(name = "created_by", nullable = false, updatable = false)
-    private String createdBy;
+    @ManyToOne
+    @JoinColumn(name = "created_by", referencedColumnName = "login", nullable = false, updatable = false)
+    private User createdBy;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_by")
-    private String updatedBy;
+    @ManyToOne
+    @JoinColumn(name = "updated_by", referencedColumnName = "login")
+    private User updatedBy;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "admin_access", nullable = false)
+    private boolean adminAccess;
 }

@@ -15,17 +15,19 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Table(name = "person")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Person extends AbstractEntity {
 
     @NotBlank
     private String name; //Поле не может быть null, Строка не может быть пустой
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "coordinates_id", referencedColumnName = "id")
     private Coordinates coordinates; //Поле не может быть null
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "eye_color")
     private Color eyeColor; //Поле не может быть null
 

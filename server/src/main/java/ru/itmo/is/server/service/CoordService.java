@@ -36,8 +36,8 @@ public class CoordService {
 
     @Transactional
     public void delete(int id) {
-        var coord = coordDao.getO(id);
-        if (coord.isEmpty()) throw new NotFoundException();
+        var coordO = coordDao.getO(id);
+        if (coordO.isEmpty()) throw new NotFoundException();
         coordDao.delete(id);
     }
 

@@ -64,10 +64,10 @@ public class AuthService {
         var login = jwtManager.getLogin(jwt);
         var role = jwtManager.getRole(jwt);
 
-        var user = userDao.getUser(login);
-        if (user.isEmpty()) throw new UnauthorizedException("Invalid auth token");
-        if (!user.get().getRole().equals(role)) throw new UnauthorizedException("Invalid auth token");
-        return user.get();
+        var userO = userDao.getUser(login);
+        if (userO.isEmpty()) throw new UnauthorizedException("Invalid auth token");
+        if (!userO.get().getRole().equals(role)) throw new UnauthorizedException("Invalid auth token");
+        return userO.get();
     }
 
     public List<String> getBids() {

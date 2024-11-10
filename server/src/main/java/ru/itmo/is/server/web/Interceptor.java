@@ -6,7 +6,6 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.ext.Provider;
 import lombok.extern.log4j.Log4j2;
-import ru.itmo.is.server.entity.security.Role;
 import ru.itmo.is.server.exception.UnauthorizedException;
 import ru.itmo.is.server.service.AuthService;
 
@@ -17,7 +16,7 @@ public class Interceptor implements ContainerRequestFilter {
     private static final String AUTH_TYPE = "Bearer";
 
     @Inject
-    private ActiveUserHolder userHolder;
+    private ActiveUserHolder activeUser;
     @Inject
     private AuthService authService;
 
@@ -27,9 +26,9 @@ public class Interceptor implements ContainerRequestFilter {
         var method = context.getMethod();
         log.info("Accepted {} {}", method, path);
 
-        if (!path.startsWith("/auth")) {
+        if (!path.startsWith("/auth") || path.endsWith("/whoami")) {
             authIntercept(context);
-            if (path.startsWith("/admin") && userHolder.getRole() != Role.ADMIN)
+            if (path.startsWith("/admin") && !activeUser.isAdmin())
                 throw new ForbiddenException("Permission denied");
         }
     }
@@ -40,6 +39,6 @@ public class Interceptor implements ContainerRequestFilter {
         if (!authHeader.startsWith(AUTH_TYPE)) throw new UnauthorizedException("Invalid authorization type");
         var token = authHeader.substring(AUTH_TYPE.length() + 1);
         var user = authService.getUser(token);
-        userHolder.setUser(user);
+        activeUser.setUser(user);
     }
 }

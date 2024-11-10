@@ -19,16 +19,16 @@ public class CoordController {
         return Response.ok(coordService.getAll()).build();
     }
 
-    @GET
-    @Path("/{id}")
-    public Response getCoord(@PathParam("id") int id) {
-        return Response.ok(coordService.get(id)).build();
-    }
-
     @POST
     public Response createCoord(CoordRequest req) {
         coordService.create(req);
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response getCoord(@PathParam("id") int id) {
+        return Response.ok(coordService.get(id)).build();
     }
 
     @PUT

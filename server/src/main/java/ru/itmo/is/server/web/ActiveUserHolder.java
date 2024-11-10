@@ -2,21 +2,17 @@ package ru.itmo.is.server.web;
 
 import jakarta.enterprise.context.RequestScoped;
 import lombok.Getter;
+import lombok.Setter;
 import ru.itmo.is.server.entity.security.Role;
 import ru.itmo.is.server.entity.security.User;
 
 @RequestScoped
 @Getter
+@Setter
 public class ActiveUserHolder {
-    private String login;
-    private Role role;
-
-    public void setUser(User user) {
-        this.login = user.getLogin();
-        this.role = user.getRole();
-    }
+    private User user;
 
     public boolean isAdmin() {
-        return role == Role.ADMIN;
+        return user.getRole() == Role.ADMIN;
     }
 }

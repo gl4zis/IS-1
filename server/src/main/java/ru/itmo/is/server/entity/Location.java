@@ -14,7 +14,7 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Table(name = "location")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Location extends AbstractEntity {
 
     @NotNull

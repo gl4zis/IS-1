@@ -14,7 +14,7 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Table(name = "coordinates")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Coordinates extends AbstractEntity {
 
     @Column(nullable = false)

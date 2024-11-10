@@ -19,7 +19,7 @@ public class AbstractEntityListener {
     @PrePersist
     public void prePersist(Object obj) {
         if (obj instanceof AbstractEntity entity) {
-            entity.setCreatedBy(userHolder.getLogin());
+            entity.setCreatedBy(userHolder.getUser());
             entity.setCreatedAt(LocalDateTime.now());
         }
     }
@@ -28,7 +28,7 @@ public class AbstractEntityListener {
     public void preUpdate(Object obj) {
         if (obj instanceof AbstractEntity entity) {
             validateAccess(entity);
-            entity.setUpdatedBy(userHolder.getLogin());
+            entity.setUpdatedBy(userHolder.getUser());
             entity.setUpdatedAt(LocalDateTime.now());
         }
     }
@@ -41,8 +41,8 @@ public class AbstractEntityListener {
     }
 
     public void validateAccess(AbstractEntity entity) {
-        if (userHolder.isAdmin()) return;
-        if (entity.getCreatedBy().equals(userHolder.getLogin())) return;
+        if (entity.getCreatedBy().equals(userHolder.getUser())) return;
+        if (userHolder.isAdmin() && entity.isAdminAccess()) return;
         throw new ForbiddenException("Permission denied");
     }
 }
