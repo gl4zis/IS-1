@@ -1,11 +1,14 @@
 package ru.itmo.is.server.exception;
 
-public class InvalidRequestException extends RuntimeException {
+import jakarta.ws.rs.core.Response;
+
+public class InvalidRequestException extends CustomException {
     public InvalidRequestException() {
         super();
     }
 
-    public InvalidRequestException(String message) {
-        super("Invalid request: " + message);
+    @Override
+    public Response.Status getStatus() {
+        return Response.Status.BAD_REQUEST;
     }
 }

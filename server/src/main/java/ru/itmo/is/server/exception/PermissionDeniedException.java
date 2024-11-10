@@ -1,7 +1,14 @@
 package ru.itmo.is.server.exception;
 
-public class PermissionDeniedException extends RuntimeException {
+import jakarta.ws.rs.core.Response;
+
+public class PermissionDeniedException extends CustomException {
     public PermissionDeniedException() {
         super("Permission denied");
+    }
+
+    @Override
+    public Response.Status getStatus() {
+        return Response.Status.FORBIDDEN;
     }
 }
