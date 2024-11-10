@@ -33,6 +33,7 @@ dependencies {
   implementation('jakarta.transaction:jakarta.transaction-api:2.0.1')
   implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.0')
   implementation('com.auth0:java-jwt:4.4.0')
+  implementation('org.modelmapper:modelmapper:3.2.1')
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")

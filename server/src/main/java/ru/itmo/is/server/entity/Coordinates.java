@@ -14,11 +14,10 @@ import lombok.Setter;
 @Setter
 public class Coordinates extends AbstractEntity {
 
-    @Column(name = "x", nullable = false)
+    @Column(nullable = false)
     private long x;
 
     @Min(-725)
     @NotNull
-    @Column(name = "y")
     private Double y; //Значение поля должно быть больше -725, Поле не может быть null
 }

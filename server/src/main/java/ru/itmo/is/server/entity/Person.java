@@ -1,8 +1,10 @@
 package ru.itmo.is.server.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -14,7 +16,6 @@ import org.hibernate.validator.constraints.Length;
 public class Person extends AbstractEntity {
 
     @NotBlank
-    @Column(name = "name")
     private String name; //Поле не может быть null, Строка не может быть пустой
 
     @ManyToOne
@@ -30,18 +31,16 @@ public class Person extends AbstractEntity {
     @Column(name = "hair_color")
     private Color hairColor; //Поле не может быть null
 
-    @Nullable
     @ManyToOne
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location; //Поле может быть null
 
     @Positive
-    @Column(name = "height", nullable = false)
+    @Column(nullable = false)
     private float height; //Значение поля должно быть больше 0
 
     @NotNull
     @Min(1)
-    @Column(name = "weight")
     private Long weight; //Поле не может быть null, Значение поля должно быть больше 0
 
     @NotNull
@@ -49,8 +48,6 @@ public class Person extends AbstractEntity {
     @Column(name = "passport_id")
     private String passportId; //Длина строки должна быть не меньше 4, Поле не может быть null
 
-    @Nullable
     @Enumerated(EnumType.STRING)
-    @Column(name = "nationality")
     private Country nationality; //Поле может быть null
 }

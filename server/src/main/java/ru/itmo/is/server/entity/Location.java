@@ -15,15 +15,13 @@ import org.hibernate.validator.constraints.Length;
 public class Location extends AbstractEntity {
 
     @NotNull
-    @Column(name = "x")
     private Long x; //Поле не может быть null
 
     @NotNull
-    @Column(name = "y")
     private Double y; //Поле не может быть null
 
     @NotNull
     @Length(max = 312)
-    @Column(name = "name", length = 312)
+    @Column(length = 312)
     private String name; //Длина строки не должна быть больше 312, Поле не может быть null
 }

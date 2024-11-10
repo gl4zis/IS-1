@@ -1,21 +1,26 @@
 package ru.itmo.is.server.entity.security;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "usr")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
-    @Column(name = "username")
-    private String username;
+    private String login;
 
-    @Column(name = "password", nullable = false)
+    @NotNull
     private String password;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
