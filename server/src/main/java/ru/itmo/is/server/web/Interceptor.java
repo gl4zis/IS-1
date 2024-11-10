@@ -1,13 +1,13 @@
 package ru.itmo.is.server.web;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.ext.Provider;
 import lombok.extern.log4j.Log4j2;
 import ru.itmo.is.server.entity.security.Role;
-import ru.itmo.is.server.exception.AuthorizationException;
-import ru.itmo.is.server.exception.PermissionDeniedException;
+import ru.itmo.is.server.exception.UnauthorizedException;
 import ru.itmo.is.server.service.AuthService;
 
 @Provider
@@ -29,15 +29,15 @@ public class Interceptor implements ContainerRequestFilter {
 
         if (!path.startsWith("/auth")) {
             authIntercept(context);
-            if (path.startsWith("/admin") && userHolder.getRole() != Role.ADMIN) throw new PermissionDeniedException();
+            if (path.startsWith("/admin") && userHolder.getRole() != Role.ADMIN)
+                throw new ForbiddenException("Permission denied");
         }
     }
 
     private void authIntercept(ContainerRequestContext context) {
         var authHeader = context.getHeaderString(AUTH_HEADER);
-        if (authHeader == null) throw new AuthorizationException("No Authorization header");
-
-        if (!authHeader.startsWith(AUTH_TYPE)) throw new AuthorizationException("Invalid Authorization type");
+        if (authHeader == null) throw new UnauthorizedException("No authorization header");
+        if (!authHeader.startsWith(AUTH_TYPE)) throw new UnauthorizedException("Invalid authorization type");
         var token = authHeader.substring(AUTH_TYPE.length() + 1);
         var user = authService.getUser(token);
         userHolder.setUser(user);

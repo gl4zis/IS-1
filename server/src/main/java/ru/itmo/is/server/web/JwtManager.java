@@ -9,7 +9,7 @@ import jakarta.inject.Inject;
 import ru.itmo.is.server.config.AppProps;
 import ru.itmo.is.server.entity.security.Role;
 import ru.itmo.is.server.entity.security.User;
-import ru.itmo.is.server.exception.AuthorizationException;
+import ru.itmo.is.server.exception.UnauthorizedException;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -60,7 +60,7 @@ public class JwtManager {
                     .parseSignedClaims(jwt)
                     .getPayload();
         } catch (Exception e) {
-            throw new AuthorizationException();
+            throw new UnauthorizedException("Invalid auth token");
         }
     }
 }

@@ -18,12 +18,8 @@ public class UserDao {
         return Optional.ofNullable(em.find(User.class, login));
     }
 
-    public void saveUser(User user) {
-        em.persist(user);
-    }
-
-    public void saveAdminBid(AdminRegistrationBid adminBid) {
-        em.persist(adminBid);
+    public Optional<AdminRegistrationBid> getAdminBid(String login) {
+        return Optional.ofNullable(em.find(AdminRegistrationBid.class, login));
     }
 
     public boolean isLoginBusy(String login) {
@@ -36,5 +32,24 @@ public class UserDao {
     public List<User> getAdmins() {
         return em.createQuery("FROM User u WHERE u.role = 'ADMIN'", User.class)
                 .getResultList();
+    }
+
+    public List<AdminRegistrationBid> getAdminBids() {
+        return em.createQuery("FROM AdminRegistrationBid", AdminRegistrationBid.class)
+                .getResultList();
+    }
+
+    public void save(User user) {
+        em.persist(user);
+    }
+
+    public void save(AdminRegistrationBid adminBid) {
+        em.persist(adminBid);
+    }
+
+    public void deleteBid(String login) {
+        em.createQuery("DELETE FROM AdminRegistrationBid bid WHERE bid.login = :login")
+                .setParameter("login", login)
+                .executeUpdate();
     }
 }
