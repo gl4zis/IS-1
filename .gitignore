@@ -4,5 +4,6 @@ server/server.iml
 server/.gradle
 server/gradle
 server/build
+server/src/main/resources/secret.properties
 
 IS-lab1.iml

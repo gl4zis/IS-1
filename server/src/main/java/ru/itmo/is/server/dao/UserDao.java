@@ -7,11 +7,16 @@ import ru.itmo.is.server.entity.security.AdminRegistrationBid;
 import ru.itmo.is.server.entity.security.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class UserDao {
     @PersistenceContext
     private EntityManager em;
+
+    public Optional<User> getUser(String login) {
+        return Optional.ofNullable(em.find(User.class, login));
+    }
 
     public void saveUser(User user) {
         em.persist(user);

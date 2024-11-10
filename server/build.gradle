@@ -21,22 +21,28 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-  compileOnly('jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0')
-  compileOnly('jakarta.ws.rs:jakarta.ws.rs-api:4.0.0')
-  compileOnly('jakarta.servlet:jakarta.servlet-api:6.1.0')
-  implementation('org.hibernate.orm:hibernate-core:6.6.0.Final')
-  implementation('org.postgresql:postgresql:42.7.4')
-  compileOnly('org.projectlombok:lombok:1.18.34')
-  annotationProcessor('org.projectlombok:lombok:1.18.34')
-  implementation('org.apache.logging.log4j:log4j-core:2.24.1')
-  implementation('org.hibernate.validator:hibernate-validator:8.0.1.Final')
-  implementation('jakarta.transaction:jakarta.transaction-api:2.0.1')
-  implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.0')
-  implementation('com.auth0:java-jwt:4.4.0')
-  implementation('org.modelmapper:modelmapper:3.2.1')
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.0")
+  // jakarta
+  compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
+  compileOnly 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
+  compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+  implementation 'jakarta.transaction:jakarta.transaction-api:2.0.1'
+  // hibernate
+  implementation 'org.hibernate.orm:hibernate-core:6.6.0.Final'
+  implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+  // jdbc driver
+  implementation 'org.postgresql:postgresql:42.7.4'
+  // lombok
+  compileOnly 'org.projectlombok:lombok:1.18.34'
+  annotationProcessor 'org.projectlombok:lombok:1.18.34'
+  // logging
+  implementation 'org.apache.logging.log4j:log4j-core:2.24.1'
+  // jwt
+  implementation 'io.jsonwebtoken:jjwt:0.12.6'
+  // modelmapper
+  implementation 'org.modelmapper:modelmapper:3.2.1'
+  // testing
+  testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
 }
 
 test {

@@ -7,9 +7,10 @@ import lombok.extern.log4j.Log4j2;
 
 @Provider
 @Log4j2
-public class RequestInterceptor implements ContainerRequestFilter {
+public class Interceptor implements ContainerRequestFilter {
+
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        log.info("REQUEST ON: {}", requestContext.getUriInfo().getRequestUri().toASCIIString());
+        log.info("REQUEST ON: {}", requestContext.getUriInfo().getPath());
     }
 }

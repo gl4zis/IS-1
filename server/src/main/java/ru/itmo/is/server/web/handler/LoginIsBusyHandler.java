@@ -1,4 +1,4 @@
-package ru.itmo.is.server.web;
+package ru.itmo.is.server.web.handler;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
