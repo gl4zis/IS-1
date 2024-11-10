@@ -1,6 +1,6 @@
 package ru.itmo.is.server.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
@@ -10,20 +10,21 @@ import ru.itmo.is.server.dao.UserDao;
 import ru.itmo.is.server.dto.request.LoginRequest;
 import ru.itmo.is.server.dto.request.RegisterRequest;
 import ru.itmo.is.server.dto.response.JwtResponse;
-import ru.itmo.is.server.dto.response.RegistrationBidsResponse;
 import ru.itmo.is.server.entity.security.AdminRegistrationBid;
 import ru.itmo.is.server.entity.security.Role;
 import ru.itmo.is.server.entity.security.User;
-import ru.itmo.is.server.exception.*;
+import ru.itmo.is.server.exception.ConflictException;
+import ru.itmo.is.server.exception.UnauthorizedException;
 import ru.itmo.is.server.web.JwtManager;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
-@ApplicationScoped
+@RequestScoped
 public class AuthService {
     private static final String PASSWORD_HASH_ALGORITHM = "SHA-384";
 
@@ -69,9 +70,8 @@ public class AuthService {
         return user.get();
     }
 
-    public RegistrationBidsResponse getBids() {
-        return new RegistrationBidsResponse(userDao.getAdminBids()
-                .stream().map(AdminRegistrationBid::getLogin).toList());
+    public List<String> getBids() {
+        return userDao.getAdminBids().stream().map(AdminRegistrationBid::getLogin).toList();
     }
 
     @Transactional

@@ -5,14 +5,17 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import ru.itmo.is.server.entity.util.AbstractEntity;
 
 @Entity
 @Table(name = "person")
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class Person extends AbstractEntity {
 
     @NotBlank

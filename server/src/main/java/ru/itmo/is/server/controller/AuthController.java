@@ -1,6 +1,5 @@
 package ru.itmo.is.server.controller;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -13,7 +12,6 @@ import ru.itmo.is.server.dto.request.RegisterRequest;
 import ru.itmo.is.server.service.AuthService;
 
 @Path("/auth")
-@ApplicationScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthController {

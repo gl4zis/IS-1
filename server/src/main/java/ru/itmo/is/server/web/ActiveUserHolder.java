@@ -15,4 +15,8 @@ public class ActiveUserHolder {
         this.login = user.getLogin();
         this.role = user.getRole();
     }
+
+    public boolean isAdmin() {
+        return role == Role.ADMIN;
+    }
 }
