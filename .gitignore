@@ -7,3 +7,4 @@ server/build
 server/src/main/resources/secret.properties
 
 IS-lab1.iml
+client.iml
