@@ -7,6 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginRequest {
+    /**
+     * Format: Base64.encode(user:password)
+     */
     @NotBlank
     private String credentials;
 }
