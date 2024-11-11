@@ -1,0 +1,9 @@
+INSERT INTO usr (login, password, role) VALUES ('admin', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'ADMIN'),('user', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'USER'),('abuser', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'USER');
+
+INSERT INTO admin_bid (login, password) VALUES ('katz', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f'),('hot_dog', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f');
+
+INSERT INTO coordinates (id, x, y, created_by, created_at, admin_access) VALUES (1, 0, 0, 'user', LOCALTIMESTAMP, false),(2, 100, -92.5, 'user', LOCALTIMESTAMP, true),(3, 55, 55, 'abuser', LOCALTIMESTAMP, true),(4, 1000, 1000, 'admin', LOCALTIMESTAMP, false);
+
+INSERT INTO location (id, name, x, y, created_by, created_at, admin_access) VALUES (1, 'pulkovo', 0, 0, 'admin', LOCALTIMESTAMP, false),(2, 'home', 4, 5, 'user', LOCALTIMESTAMP, true),(3, 'pub', 4, 6, 'abuser', LOCALTIMESTAMP, true),(4, 'itmo', 4, 5, 'admin', LOCALTIMESTAMP, true);
+
+INSERT INTO person (id, name, eye_color, hair_color, height, weight, nationality, passport_id, coordinates_id, location_id, created_by, created_at, admin_access) VALUES(1, 'Kirill', 'ORANGE', 'BLACK', 1.93, 90, 'NORTH_KOREA', 'no_passport', 1, 4, 'admin', LOCALTIMESTAMP, false),(2, 'Sasha P.', 'GREEN', 'BLUE', 1.85, 80, 'USA', '7777', 4, null, 'abuser', LOCALTIMESTAMP, true),(3, 'Trump', 'BLACK', 'WHITE', 1.7, 85, 'USA', '0001', 4, 2, 'user', LOCALTIMESTAMP, true),(4, 'Rick', 'BLACK', 'BLUE', 1.8, 65, 'FRANCE', 'BOOBS', 2, 3, 'user', LOCALTIMESTAMP, false),(5, 'Cringulick', 'BLUE', 'ORANGE', 2.7, 200, 'CHINA', 'pass?', 3, 1, 'abuser', LOCALTIMESTAMP, false);
