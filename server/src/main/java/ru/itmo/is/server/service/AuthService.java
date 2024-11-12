@@ -3,7 +3,6 @@ package ru.itmo.is.server.service;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import org.modelmapper.ModelMapper;
 import ru.itmo.is.server.dao.UserDao;
@@ -20,7 +19,6 @@ import ru.itmo.is.server.web.JwtManager;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +35,7 @@ public class AuthService {
 
     @Transactional
     public Optional<JwtResponse> register(RegisterRequest req) {
-        var user = mapUser(req);
+        var user = mapper.map(req, User.class);
         if (userDao.isLoginBusy(user.getLogin()))
             throw new ConflictException("Login '" + user.getLogin() + "' is already in use");
 
@@ -51,10 +49,9 @@ public class AuthService {
     }
 
     public JwtResponse login(LoginRequest req) {
-        var credentials = mapCredentials(req.getCredentials());
-        var userO = userDao.getUser(credentials.getLogin());
+        var userO = userDao.getUser(req.getLogin());
         if (userO.isEmpty()) throw new UnauthorizedException("Invalid login or password");
-        if (!userO.get().getPassword().equals(credentials.getPassword()))
+        if (!userO.get().getPassword().equals(hash384(req.getPassword())))
             throw new UnauthorizedException("Invalid login or password");
 
         return new JwtResponse(jwtManager.createToken(userO.get()));
@@ -104,23 +101,6 @@ public class AuthService {
             return hash.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private User mapUser(RegisterRequest req) {
-        User user = mapCredentials(req.getCredentials());
-        user.setRole(req.getRole());
-        return user;
-    }
-
-    private User mapCredentials(String credentials) {
-        try {
-            var decoded = new String(Base64.getDecoder().decode(credentials));
-            var login = decoded.split(":")[0];
-            var password = decoded.split(":")[1];
-            return new User(login, hash384(password), null);
-        } catch (Exception e) {
-            throw new BadRequestException();
         }
     }
 }
