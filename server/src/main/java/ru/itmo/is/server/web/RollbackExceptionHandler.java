@@ -11,8 +11,7 @@ public class RollbackExceptionHandler implements ExceptionMapper<RollbackExcepti
 
     @Override
     public Response toResponse(RollbackException exception) {
-        var cause = exception.getCause();
-        if (cause instanceof WebApplicationException webE) {
+        if (exception.getCause() instanceof WebApplicationException webE) {
             return WebExceptionHandler.convert(webE);
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)

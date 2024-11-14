@@ -20,13 +20,13 @@ public class LocationService {
     private LocationDao locationDao;
 
     public List<LocationResponse> getAll() {
-        return locationDao.getAll().stream().map(coord -> mapper.map(coord, LocationResponse.class)).toList();
+        return locationDao.getAll().stream().map(l -> mapper.map(l, LocationResponse.class)).toList();
     }
 
     public LocationResponse get(int id) {
-        var location = locationDao.getO(id);
-        if (location.isEmpty()) throw new NotFoundException();
-        return mapper.map(location, LocationResponse.class);
+        var locationO = locationDao.getO(id);
+        if (locationO.isEmpty()) throw new NotFoundException();
+        return mapper.map(locationO.get(), LocationResponse.class);
     }
 
     @Transactional

@@ -6,6 +6,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import jakarta.ws.rs.ForbiddenException;
+import ru.itmo.is.server.service.AuthService;
 import ru.itmo.is.server.web.ActiveUserHolder;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public class AbstractEntityListener {
     @PrePersist
     public void prePersist(Object obj) {
         if (obj instanceof AbstractEntity entity) {
-            entity.setCreatedBy(userHolder.getUser());
+            entity.setCreatedBy(userHolder.get());
             entity.setCreatedAt(LocalDateTime.now());
         }
     }
@@ -28,7 +29,7 @@ public class AbstractEntityListener {
     public void preUpdate(Object obj) {
         if (obj instanceof AbstractEntity entity) {
             validateAccess(entity);
-            entity.setUpdatedBy(userHolder.getUser());
+            entity.setUpdatedBy(userHolder.get());
             entity.setUpdatedAt(LocalDateTime.now());
         }
     }
@@ -41,8 +42,6 @@ public class AbstractEntityListener {
     }
 
     public void validateAccess(AbstractEntity entity) {
-        if (entity.getCreatedBy().equals(userHolder.getUser())) return;
-        if (userHolder.isAdmin() && entity.isAdminAccess()) return;
-        throw new ForbiddenException("Permission denied");
+        if (!userHolder.hasAccess(entity)) throw new ForbiddenException("Permission denied");
     }
 }

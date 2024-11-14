@@ -1,15 +1,20 @@
 package ru.itmo.is.server.dto.request;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 import ru.itmo.is.server.dto.PersonDto;
+import ru.itmo.is.server.validation.ValidPerson;
 
 @Getter
 @Setter
+@ValidPerson
 public class PersonRequest extends PersonDto {
-    @NotNull
     private Integer coordId;
+    @Valid
+    private CoordRequest coord;
     private Integer locationId;
+    @Valid
+    private LocationRequest location;
     private boolean adminAccess;
 }

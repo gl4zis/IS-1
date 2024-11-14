@@ -1,6 +1,8 @@
 package ru.itmo.is.server.controller;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -27,20 +29,20 @@ public class LocationController {
 
     @GET
     @Path("/{id}")
-    public Response getLocation(@PathParam("id") int id) {
+    public Response getLocation(@PathParam("id") @NotNull Integer id) {
         return Response.ok(locationService.get(id)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response updateLocation(@PathParam("id") Integer id, LocationRequest req) {
+    public Response updateLocation(@PathParam("id") @NotNull Integer id, @Valid LocationRequest req) {
         locationService.update(id, req);
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteLocation(@PathParam("id") Integer id) {
+    public Response deleteLocation(@PathParam("id") @NotNull Integer id) {
         locationService.delete(id);
         return Response.ok().build();
     }

@@ -24,9 +24,9 @@ public class CoordService {
     }
 
     public CoordResponse get(int id) {
-        var coord = coordDao.getO(id);
-        if (coord.isEmpty()) throw new NotFoundException();
-        return mapper.map(coord, CoordResponse.class);
+        var coordO = coordDao.getO(id);
+        if (coordO.isEmpty()) throw new NotFoundException();
+        return mapper.map(coordO.get(), CoordResponse.class);
     }
 
     @Transactional

@@ -39,6 +39,6 @@ public class Interceptor implements ContainerRequestFilter {
         if (!authHeader.startsWith(AUTH_TYPE)) throw new UnauthorizedException("Invalid authorization type");
         var token = authHeader.substring(AUTH_TYPE.length() + 1);
         var user = authService.getUser(token);
-        activeUser.setUser(user);
+        activeUser.set(user);
     }
 }

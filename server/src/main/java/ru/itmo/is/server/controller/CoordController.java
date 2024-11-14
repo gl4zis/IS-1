@@ -1,6 +1,8 @@
 package ru.itmo.is.server.controller;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -20,27 +22,27 @@ public class CoordController {
     }
 
     @POST
-    public Response createCoord(CoordRequest req) {
+    public Response createCoord(@Valid CoordRequest req) {
         coordService.create(req);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @GET
     @Path("/{id}")
-    public Response getCoord(@PathParam("id") int id) {
+    public Response getCoord(@PathParam("id") @NotNull Integer id) {
         return Response.ok(coordService.get(id)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response updateCoord(@PathParam("id") Integer id, CoordRequest req) {
+    public Response updateCoord(@PathParam("id") @NotNull Integer id, @Valid CoordRequest req) {
         coordService.update(id, req);
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteCoord(@PathParam("id") Integer id) {
+    public Response deleteCoord(@PathParam("id") @NotNull Integer id) {
         coordService.delete(id);
         return Response.ok().build();
     }

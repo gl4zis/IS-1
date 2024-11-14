@@ -8,4 +8,5 @@ import ru.itmo.is.server.dto.request.LocationRequest;
 @Setter
 public class LocationResponse extends LocationRequest {
     private Integer id;
+    private boolean accessible;
 }

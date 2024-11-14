@@ -10,4 +10,5 @@ public class PersonResponse extends PersonDto {
     private Integer id;
     private CoordResponse coordinates;
     private LocationResponse location;
+    private boolean accessible;
 }

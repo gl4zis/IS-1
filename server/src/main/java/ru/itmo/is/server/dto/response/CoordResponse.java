@@ -1,11 +1,11 @@
 package ru.itmo.is.server.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
-import ru.itmo.is.server.dto.request.CoordRequest;
+import lombok.*;
+import ru.itmo.is.server.dto.CoordDto;
 
 @Getter
 @Setter
-public class CoordResponse extends CoordRequest {
+public class CoordResponse extends CoordDto {
     private Integer id;
+    private boolean accessible;
 }

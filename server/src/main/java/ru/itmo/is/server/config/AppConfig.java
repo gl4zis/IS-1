@@ -11,13 +11,13 @@ public class AppConfig {
 
     @Produces
     public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true);
 
-        return modelMapper;
+        return mapper;
     }
 }

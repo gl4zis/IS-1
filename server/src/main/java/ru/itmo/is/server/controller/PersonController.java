@@ -1,6 +1,8 @@
 package ru.itmo.is.server.controller;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -21,27 +23,27 @@ public class PersonController {
     }
 
     @POST
-    public Response createPerson(PersonRequest req) {
+    public Response createPerson(@Valid PersonRequest req) {
         personService.create(req);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @GET
     @Path("/{id}")
-    public Response getPerson(@PathParam("id") int id) {
+    public Response getPerson(@PathParam("id") @NotNull Integer id) {
         return Response.ok(personService.get(id)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response updatePerson(@PathParam("id") Integer id, PersonRequest req) {
+    public Response updatePerson(@PathParam("id") @NotNull Integer id, @Valid PersonRequest req) {
         personService.update(id, req);
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deletePerson(@PathParam("id") Integer id) {
+    public Response deletePerson(@PathParam("id") @NotNull Integer id) {
         personService.delete(id);
         return Response.ok().build();
     }
@@ -62,16 +64,15 @@ public class PersonController {
     @Path("/count")
     public Response countPeople(@QueryParam("weight") Long weight, @QueryParam("eyeColor") Color eyeColor) {
         if ((weight == null && eyeColor == null) || (weight != null && eyeColor != null)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new BadRequestException("Request should have one of 'weight' and 'eyeColor' params");
         }
-
-        if (weight !=null) return Response.ok(personService.countPeopleByWeight(weight)).build();
+        if (weight != null) return Response.ok(personService.countPeopleByWeight(weight)).build();
         else return Response.ok(personService.countPeopleByEyeColor(eyeColor)).build();
     }
 
     @GET
     @Path("/proportion")
-    public Response getProportion(@QueryParam("eyeColor") Color eyeColor) {
+    public Response getProportion(@QueryParam("eyeColor") @NotNull Color eyeColor) {
         return Response.ok(personService.getPeopleProportionByEyeColor(eyeColor)).build();
     }
 }
