@@ -24,14 +24,11 @@ dependencies {
   // jakarta
   compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
   compileOnly 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
-  compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
   implementation 'jakarta.transaction:jakarta.transaction-api:2.0.1'
   // hibernate
   implementation 'org.hibernate.orm:hibernate-core:6.6.0.Final'
   // validation
   implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
-  // jdbc driver
-  implementation 'org.postgresql:postgresql:42.7.4'
   // lombok
   compileOnly 'org.projectlombok:lombok:1.18.34'
   annotationProcessor 'org.projectlombok:lombok:1.18.34'
@@ -45,4 +42,5 @@ dependencies {
 }
 
 test {
-useJUnitPlatform()}
+  useJUnitPlatform()
+}

@@ -8,9 +8,8 @@ import lombok.*;
 @Table(name = "usr")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
+@NamedQuery(name = "User.isAdminsExist", query = "SELECT COUNT(u) > 0 FROM User u WHERE u.role = 'ADMIN'")
 public class User {
     @Id
     private String login;

@@ -12,7 +12,7 @@ import ru.itmo.is.server.entity.Country;
 
 @Getter
 @Setter
-public class PersonDto {
+public abstract class PersonDto {
     @NotBlank
     private String name;
     @NotNull

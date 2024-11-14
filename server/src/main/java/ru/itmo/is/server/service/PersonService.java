@@ -1,69 +1,61 @@
 package ru.itmo.is.server.service;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
-import ru.itmo.is.server.dao.CoordDao;
-import ru.itmo.is.server.dao.LocationDao;
-import ru.itmo.is.server.dao.PersonDao;
 import ru.itmo.is.server.dto.request.PersonRequest;
 import ru.itmo.is.server.dto.response.PersonResponse;
 import ru.itmo.is.server.entity.Color;
+import ru.itmo.is.server.entity.Coordinates;
+import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
 import ru.itmo.is.server.mapper.PersonMapper;
 
 import java.util.List;
 
-@RequestScoped
+@ApplicationScoped
 public class PersonService {
+    @PersistenceContext
+    private EntityManager em;
     @Inject
     private PersonMapper mapper;
-    @Inject
-    private PersonDao personDao;
-    @Inject
-    private LocationDao locationDao;
-    @Inject
-    private CoordDao coordDao;
 
     public List<PersonResponse> getAll() {
-        return mapper.toDto(personDao.getAll());
+        return mapper.toDto(getAllEntities());
     }
 
     public PersonResponse get(int id) {
-        var personO = personDao.getO(id);
-        if (personO.isEmpty()) throw new NotFoundException();
-        return mapper.toDto(personO.get());
+        var person = em.find(Person.class, id);
+        if (person == null) throw new NotFoundException();
+        return mapper.toDto(person);
     }
 
     @Transactional
     public void create(PersonRequest req) {
-        personDao.save(toEntity(req));
+        em.persist(toEntity(req));
     }
 
     @Transactional
     public void delete(int id) {
-        var personO = personDao.getO(id);
-        if (personO.isEmpty()) throw new NotFoundException();
-        personDao.delete(id);
+        var person = em.find(Person.class, id);
+        if (person == null) throw new NotFoundException();
+        em.remove(person);
     }
 
     @Transactional
     public void update(int id, PersonRequest req) {
-        var personO = personDao.getO(id);
-        if (personO.isEmpty()) throw new NotFoundException();
-
-        var person = toEntity(req);
-        person.setId(id);
-        person.setCreatedBy(personO.get().getCreatedBy());
-        person.setCreatedAt(personO.get().getCreatedAt());
-        personDao.update(person);
+        var person = em.find(Person.class, id);
+        if (person == null) throw new NotFoundException();
+        em.merge(mapper.toEntity(req, person));
     }
 
     public double getAllHeightSum() {
         double sum = 0;
-        var people = personDao.getAll();
+        var people = getAllEntities();
         for (Person p : people) {
             sum += p.getHeight();
         }
@@ -71,7 +63,7 @@ public class PersonService {
     }
 
     public PersonResponse getPersonWithMaxCoords() {
-        var people = personDao.getAll();
+        var people = getAllEntities();
         if (people.isEmpty()) throw new NotFoundException("Zero people saved");
         var maxPersonIdx = 0;
         var maxCoord = people.get(maxPersonIdx).getCoordinates();
@@ -84,36 +76,45 @@ public class PersonService {
     }
 
     public long countPeopleByWeight(long weight) {
-        return personDao.countPeopleByWeight(weight);
+        return em.createNamedQuery("Person.countByWeight", Long.class)
+                .setParameter("weight", weight).getSingleResult();
     }
 
     public long countPeopleByEyeColor(Color eyeColor) {
-        return personDao.countPeopleByEyeColor(eyeColor);
+        return em.createNamedQuery("Person.countByEyeColor", Long.class)
+                .setParameter("eyeColor", eyeColor).getSingleResult();
     }
 
     public float getPeopleProportionByEyeColor(Color eyeColor) {
-        return (float) personDao.countPeopleByEyeColor(eyeColor) / personDao.countAllPeople();
+        var countByColor = em.createNamedQuery("Person.countByEyeColor", Long.class)
+                .setParameter("eyeColor", eyeColor).getSingleResult().floatValue();
+        var count = em.createNamedQuery("Person.count", Long.class).getSingleResult();
+        return countByColor / count;
     }
     
     private Person toEntity(PersonRequest req) {
         var person = mapper.toEntity(req);
 
         if (person.getCoordinates() != null) {
-            coordDao.save(person.getCoordinates());
+            em.persist(person.getCoordinates());
         } else if (req.getCoordId() != null) {
-            var coordO = coordDao.getO(req.getCoordId());
-            if (coordO.isEmpty()) throw new BadRequestException("Coordinates with such id not exists");
-            person.setCoordinates(coordO.get());
+            var coord = em.find(Coordinates.class, req.getCoordId());
+            if (coord == null) throw new NotFoundException("Coordinates with such id not exists");
+            person.setCoordinates(coord);
         } else throw new BadRequestException("Invalid PersonRequest");
 
         if (person.getLocation() != null) {
-            locationDao.save(person.getLocation());
+            em.persist(person.getLocation());
         } else if (req.getLocationId() != null) {
-            var locationO = locationDao.getO(req.getLocationId());
-            if (locationO.isEmpty()) throw new BadRequestException("Location with such id not exists");
-            person.setLocation(locationO.get());
+            var location = em.find(Location.class, req.getLocationId());
+            if (location == null) throw new NotFoundException("Location with such id not exists");
+            person.setLocation(location);
         }
 
         return person;
+    }
+
+    private List<Person> getAllEntities() {
+        return em.createNamedQuery("Person.findAll", Person.class).getResultList();
     }
 }

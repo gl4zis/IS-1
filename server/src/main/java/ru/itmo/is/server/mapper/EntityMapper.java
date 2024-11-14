@@ -15,7 +15,9 @@ public abstract class EntityMapper<E extends AbstractEntity, REQ, RES> {
 
     @Mapping(target = "accessible", expression = "java(activeUser.hasAccess(entity))")
     public abstract RES toDto(E entity);
+
     public abstract List<RES> toDto(Collection<E> entities);
+
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "createdBy", ignore = true),
@@ -30,6 +32,7 @@ public abstract class EntityMapper<E extends AbstractEntity, REQ, RES> {
         entity.setId(edit.getId());
         entity.setCreatedAt(edit.getCreatedAt());
         entity.setCreatedBy(edit.getCreatedBy());
+        entity.setAdminAccess(edit.isAdminAccess());
         return entity;
     };
 }

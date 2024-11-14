@@ -2,16 +2,19 @@ package ru.itmo.is.server.entity.util;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.NotFoundException;
+import lombok.extern.log4j.Log4j2;
 import ru.itmo.is.server.web.ActiveUserHolder;
 
 import java.time.LocalDateTime;
 
 @RequestScoped
-public class AbstractEntityListener {
+public class EntityListener {
     @Inject
     private ActiveUserHolder userHolder;
 

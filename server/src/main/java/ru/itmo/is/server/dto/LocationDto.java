@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
-public class LocationDto {
+public abstract class LocationDto {
     @NotNull
     private Long x;
     @NotNull

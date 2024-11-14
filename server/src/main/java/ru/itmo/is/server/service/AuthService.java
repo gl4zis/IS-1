@@ -1,10 +1,11 @@
 package ru.itmo.is.server.service;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-import ru.itmo.is.server.dao.UserDao;
 import ru.itmo.is.server.dto.request.LoginRequest;
 import ru.itmo.is.server.dto.request.RegisterRequest;
 import ru.itmo.is.server.dto.response.JwtResponse;
@@ -19,10 +20,10 @@ import ru.itmo.is.server.web.JwtManager;
 import java.util.List;
 import java.util.Optional;
 
-@RequestScoped
+@ApplicationScoped
 public class AuthService {
-    @Inject
-    private UserDao userDao;
+    @PersistenceContext
+    private EntityManager em;
     @Inject
     private UserMapper mapper;
     @Inject
@@ -31,55 +32,59 @@ public class AuthService {
     @Transactional
     public Optional<JwtResponse> register(RegisterRequest req) {
         var user = mapper.toUser(req);
-        if (userDao.isLoginBusy(user.getLogin()))
+        if (isLoginBusy(user.getLogin()))
             throw new ConflictException("Login '" + user.getLogin() + "' is already in use");
 
-        if (user.getRole() == Role.USER || userDao.getAdmins().isEmpty()) {
-            userDao.save(user);
+        boolean isAdminsExist = em.createNamedQuery("User.isAdminsExist", Boolean.class)
+                .getSingleResult();
+        if (user.getRole() == Role.USER || !isAdminsExist) {
+            em.persist(user);
             return Optional.of(new JwtResponse(jwtManager.createToken(user)));
         }
 
-        userDao.save(mapper.toBid(user));
+        em.persist(mapper.toBid(user));
         return Optional.empty();
     }
 
     public JwtResponse login(LoginRequest req) {
-        var userO = userDao.getUser(req.getLogin());
-        if (userO.isEmpty()) throw new UnauthorizedException("Invalid login or password");
-        if (!userO.get().getPassword().equals(mapper.hash384(req.getPassword())))
+        var user = em.find(User.class, req.getLogin());
+        if (user == null) throw new UnauthorizedException("Invalid login or password");
+        if (!user.getPassword().equals(mapper.hash384(req.getPassword())))
             throw new UnauthorizedException("Invalid login or password");
 
-        return new JwtResponse(jwtManager.createToken(userO.get()));
+        return new JwtResponse(jwtManager.createToken(user));
     }
 
     public User getUser(String jwt) {
-        var login = jwtManager.getLogin(jwt);
-        var role = jwtManager.getRole(jwt);
-
-        var userO = userDao.getUser(login);
-        if (userO.isEmpty()) throw new UnauthorizedException("Invalid auth token");
-        if (!userO.get().getRole().equals(role)) throw new UnauthorizedException("Invalid auth token");
-        return userO.get();
+        var user = em.find(User.class, jwtManager.getLogin(jwt));
+        if (user == null || !user.getRole().equals(jwtManager.getRole(jwt)))
+            throw new UnauthorizedException("Invalid auth token");
+        return user;
     }
 
     public List<String> getBids() {
-        return userDao.getAdminBids().stream().map(AdminRegistrationBid::getLogin).toList();
+        return em.createNamedQuery("AdminRegistrationBid.findAllLogins", String.class).getResultList();
     }
 
     @Transactional
     public void acceptBid(String login) {
-        var bidO = userDao.getAdminBid(login);
-        if (bidO.isEmpty()) throw new NotFoundException();
-
-        userDao.deleteBid(login);
-        userDao.save(new User(bidO.get().getLogin(), bidO.get().getPassword(), Role.ADMIN));
+        var bid = em.find(AdminRegistrationBid.class, login);
+        if (bid == null) throw new NotFoundException();
+        em.remove(bid);
+        em.persist(mapper.toUser(bid, Role.ADMIN));
     }
 
     @Transactional
     public void rejectBid(String login) {
-        var bidO = userDao.getAdminBid(login);
-        if (bidO.isEmpty()) throw new NotFoundException();
+        var bid = em.find(AdminRegistrationBid.class, login);
+        if (bid == null) throw new NotFoundException();
+        em.remove(bid);
+    }
 
-        userDao.deleteBid(login);
+    private boolean isLoginBusy(String login) {
+        var user = em.find(User.class, login);
+        if (user != null) return true;
+        var bid = em.find(AdminRegistrationBid.class, login);
+        return bid != null;
     }
 }

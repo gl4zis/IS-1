@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CoordDto {
+public abstract class CoordDto {
     private long x;
     @NotNull
     @Min(-725)

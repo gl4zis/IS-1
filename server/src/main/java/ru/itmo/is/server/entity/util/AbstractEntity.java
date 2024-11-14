@@ -1,7 +1,6 @@
 package ru.itmo.is.server.entity.util;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.itmo.is.server.entity.security.User;
@@ -11,12 +10,10 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-@EntityListeners(AbstractEntityListener.class)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EntityListeners(EntityListener.class)
 public abstract class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Integer id;
 
     @ManyToOne

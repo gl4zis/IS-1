@@ -2,9 +2,9 @@ package ru.itmo.is.server.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -14,7 +14,7 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Table(name = "location")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@NamedQuery(name = "Location.findAll", query = "FROM Location")
 public class Location extends AbstractEntity {
 
     @NotNull
