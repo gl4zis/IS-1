@@ -5,23 +5,21 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
-import org.modelmapper.ModelMapper;
 import ru.itmo.is.server.dao.CoordDao;
 import ru.itmo.is.server.dao.LocationDao;
 import ru.itmo.is.server.dao.PersonDao;
 import ru.itmo.is.server.dto.request.PersonRequest;
 import ru.itmo.is.server.dto.response.PersonResponse;
 import ru.itmo.is.server.entity.Color;
-import ru.itmo.is.server.entity.Coordinates;
-import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
+import ru.itmo.is.server.mapper.PersonMapper;
 
 import java.util.List;
 
 @RequestScoped
 public class PersonService {
     @Inject
-    private ModelMapper mapper;
+    private PersonMapper mapper;
     @Inject
     private PersonDao personDao;
     @Inject
@@ -30,13 +28,13 @@ public class PersonService {
     private CoordDao coordDao;
 
     public List<PersonResponse> getAll() {
-        return personDao.getAll().stream().map(person -> mapper.map(person, PersonResponse.class)).toList();
+        return mapper.toDto(personDao.getAll());
     }
 
     public PersonResponse get(int id) {
         var personO = personDao.getO(id);
         if (personO.isEmpty()) throw new NotFoundException();
-        return mapper.map(personO.get(), PersonResponse.class);
+        return mapper.toDto(personO.get());
     }
 
     @Transactional
@@ -82,7 +80,7 @@ public class PersonService {
                 maxCoord = p.getCoordinates();
             }
         }
-        return mapper.map(people.get(maxPersonIdx), PersonResponse.class);
+        return mapper.toDto(people.get(maxPersonIdx));
     }
 
     public long countPeopleByWeight(long weight) {
@@ -98,27 +96,24 @@ public class PersonService {
     }
     
     private Person toEntity(PersonRequest req) {
-        var person = mapper.map(req, Person.class);
+        var person = mapper.toEntity(req);
 
-        if (req.getCoord() != null) {
-            var coord = mapper.map(req.getCoord(), Coordinates.class);
-            coordDao.save(coord);
-            person.setCoordinates(coord);
+        if (person.getCoordinates() != null) {
+            coordDao.save(person.getCoordinates());
         } else if (req.getCoordId() != null) {
             var coordO = coordDao.getO(req.getCoordId());
             if (coordO.isEmpty()) throw new BadRequestException("Coordinates with such id not exists");
             person.setCoordinates(coordO.get());
         } else throw new BadRequestException("Invalid PersonRequest");
 
-        if (req.getLocationId() != null) {
+        if (person.getLocation() != null) {
+            locationDao.save(person.getLocation());
+        } else if (req.getLocationId() != null) {
             var locationO = locationDao.getO(req.getLocationId());
             if (locationO.isEmpty()) throw new BadRequestException("Location with such id not exists");
             person.setLocation(locationO.get());
-        } else if (req.getLocation() != null) {
-            var location = mapper.map(req.getLocation(), Location.class);
-            locationDao.save(location);
-            person.setLocation(location);
         }
+
         return person;
     }
 }

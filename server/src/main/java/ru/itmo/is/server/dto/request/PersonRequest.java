@@ -12,7 +12,7 @@ import ru.itmo.is.server.validation.ValidPerson;
 public class PersonRequest extends PersonDto {
     private Integer coordId;
     @Valid
-    private CoordRequest coord;
+    private CoordRequest coordinates;
     private Integer locationId;
     @Valid
     private LocationRequest location;

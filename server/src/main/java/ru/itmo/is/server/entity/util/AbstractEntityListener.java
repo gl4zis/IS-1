@@ -6,7 +6,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import jakarta.ws.rs.ForbiddenException;
-import ru.itmo.is.server.service.AuthService;
 import ru.itmo.is.server.web.ActiveUserHolder;
 
 import java.time.LocalDateTime;

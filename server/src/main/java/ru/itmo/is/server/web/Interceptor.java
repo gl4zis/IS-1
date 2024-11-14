@@ -26,7 +26,7 @@ public class Interceptor implements ContainerRequestFilter {
         var method = context.getMethod();
         log.info("Accepted {} {}", method, path);
 
-        if (!path.startsWith("/auth") || path.endsWith("/whoami")) {
+        if (!path.startsWith("/auth")) {
             authIntercept(context);
             if (path.startsWith("/admin") && !activeUser.isAdmin())
                 throw new ForbiddenException("Permission denied");

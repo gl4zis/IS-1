@@ -28,6 +28,7 @@ dependencies {
   implementation 'jakarta.transaction:jakarta.transaction-api:2.0.1'
   // hibernate
   implementation 'org.hibernate.orm:hibernate-core:6.6.0.Final'
+  // validation
   implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
   // jdbc driver
   implementation 'org.postgresql:postgresql:42.7.4'
@@ -38,11 +39,9 @@ dependencies {
   implementation 'org.apache.logging.log4j:log4j-core:2.24.1'
   // jwt
   implementation 'io.jsonwebtoken:jjwt:0.12.6'
-  // modelmapper
-  implementation 'org.modelmapper:modelmapper:3.2.1'
-  // testing
-  testImplementation "org.junit.jupiter:junit-jupiter-api:5.11.0"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.11.0"
+  // mapper
+  implementation 'org.mapstruct:mapstruct:1.6.3'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }
 
 test {

@@ -10,7 +10,7 @@ public class PersonRequestValidator implements ConstraintValidator<ValidPerson, 
         if (value == null) return true;
 
         boolean coordIdNotNull = value.getCoordId() != null;
-        boolean coordNotNull = value.getCoord() != null;
+        boolean coordNotNull = value.getCoordinates() != null;
         boolean locationIdNull = value.getLocationId() == null;
         boolean locationNull = value.getLocation() == null;
         return (coordIdNotNull ^ coordNotNull) && (locationIdNull || locationNull);
