@@ -46,4 +46,11 @@ public class CoordController {
         coordService.delete(id);
         return Response.ok().build();
     }
+
+    @GET
+    @Path("/{id}/linked-people")
+    public Response getLinkedPeople(@PathParam("id") @NotNull Integer id, @QueryParam("enriched") boolean enriched) {
+        return enriched ? Response.ok(coordService.getLinkedPeople(id)).build() :
+                Response.ok(coordService.getLinkedPeopleIds(id)).build();
+    }
 }

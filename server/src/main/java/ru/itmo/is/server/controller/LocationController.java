@@ -46,4 +46,11 @@ public class LocationController {
         locationService.delete(id);
         return Response.ok().build();
     }
+
+    @GET
+    @Path("/{id}/linked-people")
+    public Response getLinkedPeople(@PathParam("id") @NotNull Integer id, @QueryParam("enriched") boolean enriched) {
+        return enriched ? Response.ok(locationService.getLinkedPeople(id)).build() :
+                Response.ok(locationService.getLinkedPeopleIds(id)).build();
+    }
 }
