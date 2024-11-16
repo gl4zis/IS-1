@@ -12,6 +12,8 @@ import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
 import ru.itmo.is.server.mapper.PersonMapper;
+import ru.itmo.is.server.ws.SubscriptionType;
+import ru.itmo.is.server.ws.WsSubscription;
 
 @ApplicationScoped
 public class PersonService extends BaseEntityService<Person, PersonRequest, PersonResponse, PersonMapper> {
@@ -23,12 +25,21 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
     @Transactional
     public void create(PersonRequest req) {
         em.persist(toEntity(req, null));
+        WsSubscription.onUpdate(SubscriptionType.PERSON, getAll());
     }
 
     @Override
     @Transactional
     public void update(int id, PersonRequest req) {
         em.merge(toEntity(req, find(id)));
+        WsSubscription.onUpdate(SubscriptionType.PERSON, getAll());
+    }
+
+    @Override
+    @Transactional
+    public void delete(int id) {
+        em.remove(find(id));
+        WsSubscription.onUpdate(SubscriptionType.PERSON, getAll());
     }
 
     public double getAllHeightSum() {

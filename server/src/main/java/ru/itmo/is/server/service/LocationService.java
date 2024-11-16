@@ -12,6 +12,8 @@ import ru.itmo.is.server.entity.Person;
 import ru.itmo.is.server.mapper.LocationMapper;
 import ru.itmo.is.server.mapper.PersonMapper;
 import ru.itmo.is.server.utils.StringUtils;
+import ru.itmo.is.server.ws.SubscriptionType;
+import ru.itmo.is.server.ws.WsSubscription;
 
 import java.util.List;
 
@@ -26,11 +28,26 @@ public class LocationService extends BaseEntityService<Location, LocationRequest
 
     @Override
     @Transactional
+    public void create(LocationRequest req) {
+        em.persist(mapper.toEntity(req));
+        WsSubscription.onUpdate(SubscriptionType.LOCATION, getAll());
+    }
+
+    @Override
+    @Transactional
+    public void update(int id, LocationRequest req) {
+        em.merge(mapper.toEntity(req, find(id)));
+        WsSubscription.onUpdate(SubscriptionType.LOCATION, getAll());
+    }
+
+    @Override
+    @Transactional
     public void delete(int id) {
         var linkedPeopleIds = getLinkedPeopleIds(id);
         if (!linkedPeopleIds.isEmpty())
             throw new BadRequestException("Failure! People with ids " + StringUtils.prettyString(linkedPeopleIds) + " linked to this object.");
         em.remove(find(id));
+        WsSubscription.onUpdate(SubscriptionType.LOCATION, getAll());
     }
 
     public List<Integer> getLinkedPeopleIds(int locationId) {

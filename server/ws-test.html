@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+<h1>WebSocket Client</h1>
+<h2>Received Coords:</h2>
+<ul id="coordList"></ul>
+<h2>Received Locations:</h2>
+<ul id="locationList"></ul>
+<h2>Received People:</h2>
+<ul id="personList"></ul>
+
+<script>
+    const coordSocket = new WebSocket('ws://localhost:8183/ws/coord');
+    const locationSocket = new WebSocket('ws://localhost:8183/ws/location');
+    const personSocket = new WebSocket('ws://localhost:8183/ws/person');
+
+    coordSocket.onopen = function () {
+        console.log("Coord ws connected")
+    };
+    coordSocket.onclose = function () {
+        console.log("Coord ws closed")
+    };
+    coordSocket.onmessage = function(event) {
+        console.log('Message from server:', event.data);
+        const coords = JSON.parse(event.data);
+        const list = document.getElementById('coordList');
+        list.innerHTML = '';
+        coords.forEach(coord => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${coord.id}: (${coord.x}, ${coord.y})`;
+            list.appendChild(listItem);
+        });
+    };
+
+    locationSocket.onopen = function () {
+        console.log("Location ws connected")
+    };
+    locationSocket.onclose = function () {
+        console.log("Location ws closed")
+    };
+    locationSocket.onmessage = function(event) {
+        console.log('Message from server:', event.data);
+        const locations = JSON.parse(event.data);
+        const list = document.getElementById('locationList');
+        list.innerHTML = '';
+        locations.forEach(location => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${location.id}: ${location.name}, (${location.x}, ${location.y})`;
+            list.appendChild(listItem);
+        });
+    };
+
+    personSocket.onopen = function () {
+        console.log("Person ws connected")
+    };
+    personSocket.onclose = function () {
+        console.log("Person ws closed")
+    };
+    personSocket.onmessage = function(event) {
+        console.log('Message from server:', event.data);
+        const people = JSON.parse(event.data);
+        const list = document.getElementById('personList');
+        list.innerHTML = '';
+        people.forEach(person => {
+            const listItem = document.createElement('li');
+            listItem.textContent = JSON.stringify(person);  // Лень маппить
+            list.appendChild(listItem);
+        });
+    };
+</script>
+</body>
+</html>

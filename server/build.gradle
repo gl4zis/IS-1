@@ -25,6 +25,10 @@ dependencies {
   compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
   compileOnly 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
   implementation 'jakarta.transaction:jakarta.transaction-api:2.0.1'
+  compileOnly 'jakarta.websocket:jakarta.websocket-api:2.2.0'
+  compileOnly 'jakarta.websocket:jakarta.websocket-client-api:2.2.0'
+  // jackson
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
   // hibernate
   implementation 'org.hibernate.orm:hibernate-core:6.6.0.Final'
   // validation
