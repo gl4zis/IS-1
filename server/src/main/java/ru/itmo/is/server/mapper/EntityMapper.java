@@ -27,12 +27,12 @@ public abstract class EntityMapper<E extends AbstractEntity, REQ, RES> {
     })
     public abstract E toEntity(REQ req);
 
-    public E toEntity(REQ req, E edit) {
+    public E toEntity(REQ req, E origin) {
         E entity = toEntity(req);
-        entity.setId(edit.getId());
-        entity.setCreatedAt(edit.getCreatedAt());
-        entity.setCreatedBy(edit.getCreatedBy());
-        entity.setAdminAccess(edit.isAdminAccess());
+        entity.setId(origin.getId());
+        entity.setCreatedAt(origin.getCreatedAt());
+        entity.setCreatedBy(origin.getCreatedBy());
+        entity.setAdminAccess(origin.isAdminAccess());
         return entity;
     };
 }

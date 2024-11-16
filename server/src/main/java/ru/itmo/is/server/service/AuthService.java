@@ -48,8 +48,7 @@ public class AuthService {
 
     public JwtResponse login(LoginRequest req) {
         var user = em.find(User.class, req.getLogin());
-        if (user == null) throw new UnauthorizedException("Invalid login or password");
-        if (!user.getPassword().equals(mapper.hash384(req.getPassword())))
+        if (user == null || !user.getPassword().equals(mapper.hash384(req.getPassword())))
             throw new UnauthorizedException("Invalid login or password");
 
         return new JwtResponse(jwtManager.createToken(user));
@@ -68,23 +67,25 @@ public class AuthService {
 
     @Transactional
     public void acceptBid(String login) {
-        var bid = em.find(AdminRegistrationBid.class, login);
-        if (bid == null) throw new NotFoundException();
+        var bid = findBid(login);
         em.remove(bid);
-        em.persist(mapper.toUser(bid, Role.ADMIN));
+        em.persist(mapper.toUser(bid));
     }
 
     @Transactional
     public void rejectBid(String login) {
-        var bid = em.find(AdminRegistrationBid.class, login);
-        if (bid == null) throw new NotFoundException();
-        em.remove(bid);
+        em.remove(findBid(login));
     }
 
     private boolean isLoginBusy(String login) {
         var user = em.find(User.class, login);
-        if (user != null) return true;
         var bid = em.find(AdminRegistrationBid.class, login);
-        return bid != null;
+        return bid != null || user != null;
+    }
+
+    private AdminRegistrationBid findBid(String login) {
+        var bid = em.find(AdminRegistrationBid.class, login);
+        if (bid == null) throw new NotFoundException();
+        return bid;
     }
 }

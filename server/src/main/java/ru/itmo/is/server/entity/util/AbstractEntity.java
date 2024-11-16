@@ -30,6 +30,6 @@ public abstract class AbstractEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "admin_access", nullable = false)
+    @Column(name = "admin_access", nullable = false, updatable = false)
     private boolean adminAccess;
 }

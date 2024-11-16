@@ -1,7 +1,6 @@
 package ru.itmo.is.server.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -11,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 
 @Entity
-@Table(name = "person")
 @Getter
 @Setter
 @NamedQuery(name = "Person.findAll", query = "FROM Person")
@@ -47,7 +45,7 @@ public class Person extends AbstractEntity {
     private float height; //Значение поля должно быть больше 0
 
     @NotNull
-    @Min(1)
+    @Positive
     private Long weight; //Поле не может быть null, Значение поля должно быть больше 0
 
     @NotNull

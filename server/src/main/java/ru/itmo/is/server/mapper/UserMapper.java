@@ -6,7 +6,6 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 import ru.itmo.is.server.dto.request.RegisterRequest;
 import ru.itmo.is.server.entity.security.AdminRegistrationBid;
-import ru.itmo.is.server.entity.security.Role;
 import ru.itmo.is.server.entity.security.User;
 
 import java.math.BigInteger;
@@ -17,7 +16,8 @@ import java.security.NoSuchAlgorithmException;
 public interface UserMapper {
     @Mapping(target = "password", qualifiedByName = "hash")
     User toUser(RegisterRequest req);
-    User toUser(AdminRegistrationBid bid, Role role);
+    @Mapping(target = "role", constant = "ADMIN")
+    User toUser(AdminRegistrationBid bid);
     AdminRegistrationBid toBid(User user);
 
     @Named("hash")
