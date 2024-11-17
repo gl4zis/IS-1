@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.CoordRequest;
+import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredCoordRequest;
 import ru.itmo.is.server.service.CoordService;
 
 @Path("/coord")
@@ -19,6 +20,12 @@ public class CoordController {
     @GET
     public Response getAllCoords() {
         return Response.ok(coordService.getAll()).build();
+    }
+
+    @POST
+    @Path("/filtered")
+    public Response getFilteredCoords(@NotNull @Valid FilteredCoordRequest req) {
+        return Response.ok(coordService.getFiltered(req)).build();
     }
 
     @POST

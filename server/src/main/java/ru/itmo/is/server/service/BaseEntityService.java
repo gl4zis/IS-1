@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import ru.itmo.is.server.dto.request.filter.FilteredRequest;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 import ru.itmo.is.server.mapper.EntityMapper;
 
@@ -50,5 +51,9 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES, MAP 
 
     protected List<E> findAll() {
         return em.createNamedQuery(eClass.getSimpleName() + ".findAll", eClass).getResultList();
+    }
+
+    public List<RES> getFiltered(FilteredRequest req) {
+        return mapper.toDto(em.createQuery(req.toJPQL(), eClass).getResultList());
     }
 }

@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.PersonRequest;
 import ru.itmo.is.server.dto.request.RelinkRequest;
+import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredPersonRequest;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
 
@@ -21,6 +22,12 @@ public class PersonController {
     @GET
     public Response getAllPeople() {
         return Response.ok(personService.getAll()).build();
+    }
+
+    @POST
+    @Path("/filtered")
+    public Response getFilteredCoords(@NotNull @Valid FilteredPersonRequest req) {
+        return Response.ok(personService.getFiltered(req)).build();
     }
 
     @POST
