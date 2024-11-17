@@ -6,9 +6,18 @@ import ru.itmo.is.server.dto.request.filter.FilteredRequest;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FilteredRequestValidator implements ConstraintValidator<ValidFilteredRequest, FilteredRequest> {
+    private static final Set<Class<?>> FILTER_ALLOWED_TYPES = Set.of(
+            String.class, Integer.class, Long.class, Float.class, Double.class, Boolean.class,
+            int.class, long.class, float.class, double.class, boolean.class
+    );
+    private static final boolean IS_ENUM_FILTER_ALLOWED = true;
+    private static final List<String> ADDITIONAL_FIELDS = List.of("id");
+
     @Override
     public boolean isValid(FilteredRequest value, ConstraintValidatorContext context) {
         if (value == null) return true;
@@ -22,18 +31,25 @@ public class FilteredRequestValidator implements ConstraintValidator<ValidFilter
         var sorter = value.getSorter();
         if (sorter.getField() == null || sorter.getType() == null) return false;
         var fieldNames = Arrays.stream(fields).map(Field::getName).collect(Collectors.toSet());
-        fieldNames.add("id");
+        fieldNames.addAll(ADDITIONAL_FIELDS);
         if (!fieldNames.contains(sorter.getField())) return false;
 
         var filters = value.getFilters();
-        var stringFieldNames = Arrays.stream(fields)
-                .filter(f -> f.getType() == String.class || f.getType().isEnum())
+        var filterFieldNames = Arrays.stream(fields)
+                .filter(f -> FILTER_ALLOWED_TYPES.contains(f.getType()))
                 .map(Field::getName).collect(Collectors.toSet());
-        for (var f : filters) {
-            if (f.getValue() == null || f.getValue().isEmpty()) return false;
-            if (!stringFieldNames.contains(f.getKey())) return false;
+        filterFieldNames.addAll(ADDITIONAL_FIELDS);
+        if (IS_ENUM_FILTER_ALLOWED) {
+            filterFieldNames.addAll(
+                    Arrays.stream(fields)
+                            .filter(f -> f.getType().isEnum())
+                            .map(Field::getName).collect(Collectors.toSet())
+            );
         }
-
+        for (var field : filters.keySet()) {
+            if (filters.get(field) == null ||filters.get(field).isEmpty()) return false;
+            if (!filterFieldNames.contains(field)) return false;
+        }
         return true;
     }
 }

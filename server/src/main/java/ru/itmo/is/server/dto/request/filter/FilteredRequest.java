@@ -8,7 +8,6 @@ import ru.itmo.is.server.entity.Person;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 import ru.itmo.is.server.validation.ValidFilteredRequest;
 
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -18,7 +17,7 @@ public abstract class FilteredRequest {
     private final Class<? extends AbstractEntity> eClass;
     private Paginator paginator;
     private Sorter sorter;
-    private List<Map.Entry<String, String>> filters;
+    private Map<String, String> filters;
 
     public FilteredRequest(Class<? extends AbstractEntity> eClass) {
         this.eClass = eClass;
@@ -26,13 +25,16 @@ public abstract class FilteredRequest {
 
     public String toJPQL() {
         var queryBuilder = new StringBuilder().append("FROM ").append(eClass.getSimpleName());
-        for (int i = 0; i < filters.size(); i++) {
-            if (i == 0) queryBuilder.append(" WHERE ");
-            else queryBuilder.append(" AND ");
-            var field = filters.get(i).getKey();
-            var substring = filters.get(i).getValue();
-            queryBuilder.append("LOWER(").append(field).append(")")
-                    .append(" like '%").append(substring.toLowerCase()).append("%'");
+        boolean hasWhere = false;
+        for (var entry : filters.entrySet()) {
+            if (hasWhere) queryBuilder.append(" AND ");
+            else {
+                queryBuilder.append(" WHERE ");
+                hasWhere = true;
+            }
+
+            queryBuilder.append("LOWER(CAST(").append(entry.getKey()).append(" AS text))")
+                    .append(" like '%").append(entry.getValue().toLowerCase()).append("%'");
         }
         queryBuilder.append(" ").append(sorter.toSQL())
                 .append(" ").append(paginator.toSQL());
