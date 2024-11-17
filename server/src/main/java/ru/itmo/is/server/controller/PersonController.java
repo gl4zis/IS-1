@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.PersonRequest;
+import ru.itmo.is.server.dto.request.RelinkRequest;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
 
@@ -74,5 +75,12 @@ public class PersonController {
     @Path("/proportion")
     public Response getProportion(@QueryParam("eyeColor") @NotNull Color eyeColor) {
         return Response.ok(personService.getPeopleProportionByEyeColor(eyeColor)).build();
+    }
+
+    @PUT
+    @Path("/{id}/relink")
+    public Response relink(@PathParam("id") @NotNull Integer id, @Valid @NotNull RelinkRequest req) {
+        personService.relink(id, req);
+        return Response.ok().build();
     }
 }

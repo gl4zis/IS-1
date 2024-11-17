@@ -23,6 +23,7 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 public class Person extends AbstractEntity {
 
     @NotBlank
+    @Column(nullable = false)
     private String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull

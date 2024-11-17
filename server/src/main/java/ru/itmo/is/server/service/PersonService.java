@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import ru.itmo.is.server.dto.request.PersonRequest;
+import ru.itmo.is.server.dto.request.RelinkRequest;
 import ru.itmo.is.server.dto.response.PersonResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.entity.Coordinates;
@@ -74,6 +75,21 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
                 .setParameter("eyeColor", eyeColor).getSingleResult().floatValue();
         var count = em.createNamedQuery("Person.count", Long.class).getSingleResult();
         return countByColor / count;
+    }
+
+    @Transactional
+    public void relink(int personId, RelinkRequest req) {
+        var p = find(personId);
+        var c = em.find(Coordinates.class, req.getCoordId());
+        if (c == null) throw new NotFoundException("Coordinates not found");
+        p.setCoordinates(c);
+        p.setLocation(null);
+        if (req.getLocationId() != null) {
+            var l = em.find(Location.class, req.getLocationId());
+            if (l == null) throw new NotFoundException("Location not found");
+            p.setLocation(l);
+        }
+        em.merge(p);
     }
     
     private Person toEntity(PersonRequest req, @Nullable Person origin) {
