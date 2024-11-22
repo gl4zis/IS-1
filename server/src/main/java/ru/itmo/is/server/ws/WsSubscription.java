@@ -1,12 +1,8 @@
 package ru.itmo.is.server.ws;
 
-import jakarta.inject.Inject;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
-import ru.itmo.is.server.service.CoordService;
-import ru.itmo.is.server.service.LocationService;
-import ru.itmo.is.server.service.PersonService;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,12 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 })
 public class WsSubscription {
     private static final Map<String, SubscriptionType> SUBSCRIPTIONS = new ConcurrentHashMap<>();
-    @Inject
-    private CoordService coordService;
-    @Inject
-    private LocationService locationService;
-    @Inject
-    private PersonService personService;
 
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String path) {

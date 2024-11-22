@@ -1,5 +1,6 @@
 package ru.itmo.is.server.dto.request.filter;
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import ru.itmo.is.server.entity.Coordinates;
@@ -17,6 +18,7 @@ public abstract class FilteredRequest {
     private final Class<? extends AbstractEntity> eClass;
     private Paginator paginator;
     private Sorter sorter;
+    @Nullable
     private Map<String, String> filters;
 
     public FilteredRequest(Class<? extends AbstractEntity> eClass) {
@@ -25,16 +27,18 @@ public abstract class FilteredRequest {
 
     public String toJPQL() {
         var queryBuilder = new StringBuilder().append("FROM ").append(eClass.getSimpleName());
-        boolean hasWhere = false;
-        for (var entry : filters.entrySet()) {
-            if (hasWhere) queryBuilder.append(" AND ");
-            else {
-                queryBuilder.append(" WHERE ");
-                hasWhere = true;
-            }
+        if (filters != null) {
+            boolean hasWhere = false;
+            for (var entry : filters.entrySet()) {
+                if (hasWhere) queryBuilder.append(" AND ");
+                else {
+                    queryBuilder.append(" WHERE ");
+                    hasWhere = true;
+                }
 
-            queryBuilder.append("LOWER(CAST(").append(entry.getKey()).append(" AS text))")
-                    .append(" like '%").append(entry.getValue().toLowerCase()).append("%'");
+                queryBuilder.append("LOWER(CAST(").append(entry.getKey()).append(" AS text))")
+                        .append(" like '%").append(entry.getValue().toLowerCase()).append("%'");
+            }
         }
         queryBuilder.append(" ").append(sorter.toSQL())
                 .append(" ").append(paginator.toSQL());

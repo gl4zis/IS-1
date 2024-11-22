@@ -13,11 +13,11 @@ import ru.itmo.is.server.mapper.EntityMapper;
 import java.util.List;
 
 @RequiredArgsConstructor
-public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES, MAP extends EntityMapper<E, REQ, RES>> {
+public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     @PersistenceContext
     protected EntityManager em;
     @Inject
-    protected MAP mapper;
+    protected EntityMapper<E, REQ, RES> mapper;
     private final Class<E> eClass;
 
     public List<RES> getAll() {

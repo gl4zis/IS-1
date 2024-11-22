@@ -12,12 +12,11 @@ import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
-import ru.itmo.is.server.mapper.PersonMapper;
 import ru.itmo.is.server.ws.SubscriptionType;
 import ru.itmo.is.server.ws.WsSubscription;
 
 @ApplicationScoped
-public class PersonService extends BaseEntityService<Person, PersonRequest, PersonResponse, PersonMapper> {
+public class PersonService extends BaseEntityService<Person, PersonRequest, PersonResponse> {
     public PersonService() {
         super(Person.class);
     }

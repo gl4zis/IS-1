@@ -34,5 +34,5 @@ public abstract class EntityMapper<E extends AbstractEntity, REQ, RES> {
         entity.setCreatedBy(origin.getCreatedBy());
         entity.setAdminAccess(origin.isAdminAccess());
         return entity;
-    };
+    }
 }

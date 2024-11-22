@@ -9,7 +9,6 @@ import ru.itmo.is.server.dto.response.CoordResponse;
 import ru.itmo.is.server.dto.response.PersonResponse;
 import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Person;
-import ru.itmo.is.server.mapper.CoordMapper;
 import ru.itmo.is.server.mapper.PersonMapper;
 import ru.itmo.is.server.utils.StringUtils;
 import ru.itmo.is.server.ws.SubscriptionType;
@@ -18,7 +17,7 @@ import ru.itmo.is.server.ws.WsSubscription;
 import java.util.List;
 
 @ApplicationScoped
-public class CoordService extends BaseEntityService<Coordinates, CoordRequest, CoordResponse, CoordMapper> {
+public class CoordService extends BaseEntityService<Coordinates, CoordRequest, CoordResponse> {
     @Inject
     private PersonMapper personMapper;
 

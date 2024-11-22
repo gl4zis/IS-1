@@ -9,7 +9,6 @@ import ru.itmo.is.server.dto.response.LocationResponse;
 import ru.itmo.is.server.dto.response.PersonResponse;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
-import ru.itmo.is.server.mapper.LocationMapper;
 import ru.itmo.is.server.mapper.PersonMapper;
 import ru.itmo.is.server.utils.StringUtils;
 import ru.itmo.is.server.ws.SubscriptionType;
@@ -18,7 +17,7 @@ import ru.itmo.is.server.ws.WsSubscription;
 import java.util.List;
 
 @ApplicationScoped
-public class LocationService extends BaseEntityService<Location, LocationRequest, LocationResponse, LocationMapper> {
+public class LocationService extends BaseEntityService<Location, LocationRequest, LocationResponse> {
     @Inject
     private PersonMapper personMapper;
 

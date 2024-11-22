@@ -22,7 +22,7 @@ public class FilteredRequestValidator implements ConstraintValidator<ValidFilter
     public boolean isValid(FilteredRequest value, ConstraintValidatorContext context) {
         if (value == null) return true;
 
-        if (value.getPaginator() == null || value.getFilters() == null || value.getSorter() == null) return false;
+        if (value.getPaginator() == null|| value.getSorter() == null) return false;
         var paginator = value.getPaginator();
         if (paginator.getPage() < 1 || paginator.getSize() < 0) return false;
 
@@ -35,6 +35,7 @@ public class FilteredRequestValidator implements ConstraintValidator<ValidFilter
         if (!fieldNames.contains(sorter.getField())) return false;
 
         var filters = value.getFilters();
+        if (filters == null || filters.isEmpty()) return true;
         var filterFieldNames = Arrays.stream(fields)
                 .filter(f -> FILTER_ALLOWED_TYPES.contains(f.getType()))
                 .map(Field::getName).collect(Collectors.toSet());
