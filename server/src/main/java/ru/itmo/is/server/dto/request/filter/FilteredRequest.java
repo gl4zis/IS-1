@@ -1,6 +1,6 @@
 package ru.itmo.is.server.dto.request.filter;
 
-import jakarta.annotation.Nullable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.itmo.is.server.entity.Coordinates;
@@ -13,13 +13,13 @@ import java.util.Map;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @ValidFilteredRequest
 public abstract class FilteredRequest {
     private final Class<? extends AbstractEntity> eClass;
-    private Paginator paginator;
-    private Sorter sorter;
-    @Nullable
-    private Map<String, String> filters;
+    private Paginator paginator = new Paginator();
+    private Sorter sorter = new Sorter();
+    private Map<String, String> filters = Map.of();
 
     public FilteredRequest(Class<? extends AbstractEntity> eClass) {
         this.eClass = eClass;
