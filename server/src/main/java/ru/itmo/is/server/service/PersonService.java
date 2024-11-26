@@ -12,8 +12,6 @@ import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
-import ru.itmo.is.server.ws.SubscriptionType;
-import ru.itmo.is.server.ws.WsSubscription;
 
 @ApplicationScoped
 public class PersonService extends BaseEntityService<Person, PersonRequest, PersonResponse> {
@@ -25,38 +23,22 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
     @Transactional
     public void create(PersonRequest req) {
         em.persist(toEntity(req, null));
-        WsSubscription.onUpdate(SubscriptionType.PERSON, getAll());
     }
 
     @Override
     @Transactional
     public void update(int id, PersonRequest req) {
         em.merge(toEntity(req, find(id)));
-        WsSubscription.onUpdate(SubscriptionType.PERSON, getAll());
-    }
-
-    @Override
-    @Transactional
-    public void delete(int id) {
-        em.remove(find(id));
-        WsSubscription.onUpdate(SubscriptionType.PERSON, getAll());
     }
 
     public double getAllHeightSum() {
-        return findAll().stream().mapToDouble(Person::getHeight).sum();
+        return em.createNamedQuery("Person.getHeightSum", Double.class).getSingleResult();
     }
 
     public PersonResponse getPersonWithMaxCoords() {
-        var people = findAll();
-        if (people.isEmpty()) throw new NotFoundException("Zero people saved");
-        var maxPersonIdx = 0;
-        var maxCoord = people.get(maxPersonIdx).getCoordinates();
-        for (Person p : people) {
-            if (p.getCoordinates().compareTo(maxCoord) > 0) {
-                maxCoord = p.getCoordinates();
-            }
-        }
-        return mapper.toDto(people.get(maxPersonIdx));
+        return mapper.toDto(em.createNamedQuery("Person.findMaxByCoord", Person.class)
+                .setMaxResults(1)
+                .getSingleResult());
     }
 
     public long countPeopleByWeight(long weight) {
@@ -73,7 +55,7 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
         var countByColor = em.createNamedQuery("Person.countByEyeColor", Long.class)
                 .setParameter("eyeColor", eyeColor).getSingleResult().floatValue();
         var count = em.createNamedQuery("Person.count", Long.class).getSingleResult();
-        return countByColor / count;
+        return 100 * countByColor / count;
     }
 
     @Transactional

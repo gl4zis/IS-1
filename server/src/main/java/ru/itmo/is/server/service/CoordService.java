@@ -11,8 +11,6 @@ import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Person;
 import ru.itmo.is.server.mapper.PersonMapper;
 import ru.itmo.is.server.utils.StringUtils;
-import ru.itmo.is.server.ws.SubscriptionType;
-import ru.itmo.is.server.ws.WsSubscription;
 
 import java.util.List;
 
@@ -27,26 +25,11 @@ public class CoordService extends BaseEntityService<Coordinates, CoordRequest, C
 
     @Override
     @Transactional
-    public void create(CoordRequest req) {
-        em.persist(mapper.toEntity(req));
-        WsSubscription.onUpdate(SubscriptionType.COORD, getAll());
-    }
-
-    @Override
-    @Transactional
-    public void update(int id, CoordRequest req) {
-        em.merge(mapper.toEntity(req, find(id)));
-        WsSubscription.onUpdate(SubscriptionType.COORD, getAll());
-    }
-
-    @Override
-    @Transactional
     public void delete(int id) {
         var linkedPeopleIds = getLinkedPeopleIds(id);
         if (!linkedPeopleIds.isEmpty())
             throw new BadRequestException("Failure! People with ids " + StringUtils.prettyString(linkedPeopleIds) + " linked to this object.");
         em.remove(find(id));
-        WsSubscription.onUpdate(SubscriptionType.COORD, getAll());
     }
 
     public List<Integer> getLinkedPeopleIds(int id) {

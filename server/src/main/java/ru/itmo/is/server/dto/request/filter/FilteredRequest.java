@@ -45,6 +45,18 @@ public abstract class FilteredRequest {
         return queryBuilder.toString();
     }
 
+    public void update(FilteredRequest newOne) {
+        if (newOne.paginator != null) {
+            paginator = newOne.paginator;
+        }
+        if (newOne.sorter != null) {
+            sorter = newOne.sorter;
+        }
+        if (newOne.filters != null) {
+            filters = newOne.filters;
+        }
+    }
+
     public static class FilteredCoordRequest extends FilteredRequest {
         public FilteredCoordRequest() {
             super(Coordinates.class);

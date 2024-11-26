@@ -20,6 +20,9 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @NamedQuery(name = "Person.getLinkedToCoordId", query = "SELECT p FROM Person p WHERE p.coordinates.id = :coordId")
 @NamedQuery(name = "Person.getLinkedToLocationId", query = "SELECT p FROM Person p WHERE p.location.id = :locationId")
 @NamedQuery(name = "Person.getIdsLinkedToLocationId", query = "SELECT p.id FROM Person p WHERE p.location.id = :locationId")
+@NamedQuery(name = "Person.getHeightSum", query = "SELECT SUM(p.height) FROM Person p")
+@NamedQuery(name = "Person.findMaxByCoord", query =
+"SELECT p FROM Person p ORDER BY SQRT(p.coordinates.x * p.coordinates.x + p.coordinates.y * p.coordinates.y) DESC")
 public class Person extends AbstractEntity {
 
     @NotBlank

@@ -13,6 +13,7 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Getter
 @Setter
 @NamedQuery(name = "Coordinates.findAll", query = "FROM Coordinates")
+@NamedQuery(name = "Coordinates.count", query = "SELECT COUNT(l) FROM Coordinates l")
 public class Coordinates extends AbstractEntity implements Comparable<Coordinates> {
 
     @Column(nullable = false)

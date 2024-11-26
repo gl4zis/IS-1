@@ -43,6 +43,14 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
         em.merge(mapper.toEntity(req, find(id)));
     }
 
+    public long count() {
+        return em.createNamedQuery(eClass.getSimpleName() + ".count", Long.class).getSingleResult();
+    }
+
+    public List<RES> getFiltered(FilteredRequest req) {
+        return mapper.toDto(em.createQuery(req.toJPQL(), eClass).getResultList());
+    }
+
     protected E find(int id) {
         var e = em.find(eClass, id);
         if (e == null) throw new NotFoundException();
@@ -51,9 +59,5 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
 
     protected List<E> findAll() {
         return em.createNamedQuery(eClass.getSimpleName() + ".findAll", eClass).getResultList();
-    }
-
-    public List<RES> getFiltered(FilteredRequest req) {
-        return mapper.toDto(em.createQuery(req.toJPQL(), eClass).getResultList());
     }
 }
