@@ -1,0 +1,42 @@
+<div class="form center">
+  <p-card header="Authorization">
+    <div class="center" style="white-space: pre-line;">
+      {{ isSignIn ? 'Doesn\'t' : 'Already '}} have an account?
+    </div>
+    <div class="center ref" (click)="isSignIn = !isSignIn">{{ isSignIn ? 'Sign Up' : 'Sign In' }}</div>
+
+    <div class="input">
+      <p-floatLabel>
+        <input pInputText id="username" [(ngModel)]="form.login" (input)="validateUsername()"/>
+        <label for="username">Username</label>
+      </p-floatLabel>
+      <div class="error" *ngIf="!isUsernameValid">
+        Username should be longer than 3 symbols
+      </div>
+    </div>
+
+    <div class="input">
+      <p-floatLabel>
+        <p-password id="password" [(ngModel)]="form.password"
+                    [toggleMask]="true" [feedback]="false"  (input)="validatePassword()"/>
+        <label for="password">Password</label>
+      </p-floatLabel>
+      <div class="error" *ngIf="!isPasswordValid">
+        Password should be longer than 5 symbols
+      </div>
+    </div>
+
+    <div *ngIf="!isSignIn" class="input center">
+      <p-checkbox
+        id="admin-toggle"
+        [(ngModel)]="isAdmin"
+        [binary]="true"
+      />
+      <label for="admin-toggle" style="margin-left: 5px;">I wanna be admin</label>
+    </div>
+
+    <div class="center" style="margin-top: 30px;">
+      <p-button (click)="onSubmit()" [disabled]="!isFormValid()">Submit</p-button>
+    </div>
+  </p-card>
+</div>

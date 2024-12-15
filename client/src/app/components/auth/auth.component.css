@@ -1,0 +1,30 @@
+.form {
+  width: 400px;
+  margin-top: 50px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.ref {
+  cursor: pointer;
+  color: darkviolet;
+}
+
+.input {
+  margin-top: 20px;
+
+  input {
+    width: 100%;
+  }
+
+  .error {
+    color: red;
+    margin-left: 5px;
+    font-size: 12px;
+  }
+}

@@ -11,7 +11,7 @@ import ru.itmo.is.server.service.AuthService;
 
 @Provider
 @Log4j2
-public class Interceptor implements ContainerRequestFilter {
+public class AuthInterceptor implements ContainerRequestFilter {
     private static final String AUTH_HEADER = "Authorization";
     private static final String AUTH_TYPE = "Bearer";
 
@@ -26,7 +26,7 @@ public class Interceptor implements ContainerRequestFilter {
         var method = context.getMethod();
         log.info("Accepted {} {}", method, path);
 
-        if (!path.startsWith("/auth")) {
+        if (!path.startsWith("/auth") || path.startsWith("/auth/check")) {
             authIntercept(context);
             if (path.startsWith("/admin") && !activeUser.isAdmin())
                 throw new ForbiddenException("Permission denied");

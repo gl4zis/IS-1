@@ -2,10 +2,7 @@ package ru.itmo.is.server.controller;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.LoginRequest;
@@ -36,5 +33,12 @@ public class AuthController {
     @Path("/login")
     public Response login(@Valid LoginRequest req) {
         return Response.ok(authService.login(req)).build();
+    }
+
+    // Just checking if token is valid in interceptor
+    @GET
+    @Path("/check")
+    public Response authCheck() {
+        return Response.ok().build();
     }
 }
