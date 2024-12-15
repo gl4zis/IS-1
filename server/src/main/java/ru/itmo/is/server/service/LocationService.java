@@ -29,7 +29,7 @@ public class LocationService extends BaseEntityService<Location, LocationRequest
         var linkedPeopleIds = getLinkedPeopleIds(id);
         if (!linkedPeopleIds.isEmpty())
             throw new BadRequestException("Failure! People with ids " + StringUtils.prettyString(linkedPeopleIds) + " linked to this object.");
-        em.remove(find(id));
+        super.delete(id);
     }
 
     public List<Integer> getLinkedPeopleIds(int locationId) {

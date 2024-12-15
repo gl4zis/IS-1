@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 import ru.itmo.is.server.mapper.EntityMapper;
+import ru.itmo.is.server.web.ActiveUserHolder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,6 +20,8 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     protected EntityManager em;
     @Inject
     protected EntityMapper<E, REQ, RES> mapper;
+    @Inject
+    protected ActiveUserHolder userHolder;
     private final Class<E> eClass;
 
     public List<RES> getAll() {
@@ -35,7 +39,11 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
 
     @Transactional
     public void delete(int id) {
-        em.remove(find(id));
+        var entity = find(id);
+        entity.setRemovedAt(LocalDateTime.now());
+        entity.setRemovedBy(userHolder.get());
+        em.merge((AbstractEntity) entity);
+        em.remove(entity);
     }
 
     @Transactional

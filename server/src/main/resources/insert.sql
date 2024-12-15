@@ -1,11 +1,16 @@
 DELETE FROM person;
 DELETE FROM location;
 DELETE FROM coordinates;
+DELETE FROM entity_history;
+DELETE FROM abstract_entity;
 DELETE FROM admin_bid;
 DELETE FROM usr;
 
+ALTER SEQUENCE abstract_entity_id_seq RESTART WITH 1;
+ALTER SEQUENCE entity_history_id_seq RESTART WITH 1;
+
 -- Insert data into admin_bid table
-INSERT INTO admin_bid (login, password) VALUES 
+INSERT INTO admin_bid (login, password) VALUES
 ('admin1', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f'),
 ('admin2', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f'),
 ('admin3', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f'),
@@ -18,7 +23,7 @@ INSERT INTO admin_bid (login, password) VALUES
 ('admin10', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f');
 
 -- Insert data into usr table
-INSERT INTO usr (login, password, role) VALUES 
+INSERT INTO usr (login, password, role) VALUES
 ('admin', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'ADMIN'),
 ('user1', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'USER'),
 ('user2', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'USER'),
@@ -32,77 +37,54 @@ INSERT INTO usr (login, password, role) VALUES
 ('user10', '1ab60e110d41a9aac5e30d086c490819bfe3461b38c76b9602fe9686aa0aa3d28c63c96a1019e3788c40a14f4292e50f', 'USER');
 
 -- Insert data into coordinates table
-DO $$
-DECLARE
-    i INT;
-BEGIN
-    FOR i IN 1..20000 LOOP
-        INSERT INTO coordinates (admin_access, created_at, created_by, x, y)
-        VALUES (
-            (i % 2 = 0),  -- alternate between true and false
-            NOW(),        -- created_at time
-            'user' || (i % 10 + 1),  -- creator from user1 to user10
-            floor(random() * 1000),   -- random x value
-            random() * 1000 - 725      -- random y value, ensuring it is > -725
-        );
-    END LOOP;
-END $$;
+INSERT INTO abstract_entity (created_by, created_at, admin_access) SELECT
+    'user' || (floor(random() * 10) + 1),
+    NOW(),
+    floor(random() * 2)::int::bool
+FROM generate_series(1, 3000000) i;
+
+INSERT INTO coordinates (id, x, y) SELECT
+    i,
+    floor(random() * 2000) - 1000,   -- random x value
+    random() * 2000 - 725      -- random y value, ensuring it is > -725
+FROM generate_series(1, 1000000) i;
+
 
 -- Insert data into location table
-DO $$
-DECLARE
-    i INT;
-BEGIN
-    FOR i IN 1..20000 LOOP
-        INSERT INTO location (admin_access, created_at, created_by, name, x, y)
-        VALUES (
-            (i % 2 = 0),  -- alternate between true and false
-            NOW(),        -- created_at time
-            'user' || (i % 10 + 1),  -- creator from user1 to user10
-            'Location ' || i,        -- name
-            floor(random() * 1000),   -- random x value
-            random() * 1000 - 725      -- random y value, ensuring it is > -725
-        );
-    END LOOP;
-END $$;
+INSERT INTO location (id, name, x, y) SELECT
+    i,
+    'Location ' || i,        -- name
+    floor(random() * 2000) - 1000,   -- random x value
+    random() * 2000 - 1000
+FROM generate_series(1000001, 2000000) i;
 
 -- Insert data into person table
-DO $$
-DECLARE
-    i INT;
-BEGIN
-    FOR i IN 1..20000 LOOP
-        INSERT INTO person (admin_access, created_at, created_by, eye_color, hair_color, height, name, nationality, passport_id, weight, coordinates_id, location_id)
-        VALUES (
-            (i % 2 = 0),  -- alternate between true and false for admin_access
-            NOW(),        -- created_at time
-            'user' || (i % 10 + 1),  -- creator from user1 to user10
-            CASE (i % 5) 
-                WHEN 0 THEN 'GREEN'
-                WHEN 1 THEN 'BLACK'
-                WHEN 2 THEN 'BLUE'
-                WHEN 3 THEN 'ORANGE'
-                WHEN 4 THEN 'WHITE'
-            END,            -- random eye color
-            CASE (i % 5) 
-                WHEN 0 THEN 'GREEN'
-                WHEN 1 THEN 'BLACK'
-                WHEN 2 THEN 'BLUE'
-                WHEN 3 THEN 'ORANGE'
-                WHEN 4 THEN 'WHITE'
-            END,            -- random hair color
-            (random() * 70 + 150),  -- height between 150 cm and 220 cm
-            'Person ' || i,           -- name
-            CASE (i % 4)
-                WHEN 0 THEN 'USA'
-                WHEN 1 THEN 'FRANCE'
-                WHEN 2 THEN 'CHINA'
-                WHEN 3 THEN 'NORTH_KOREA'
-            END,            -- random nationality
-            'P' || lpad(i::text, 5, '0'),  -- passport_id e.g., P00001
-            (random() * 50 + 50),  -- weight between 50 kg and 100 kg
-            (SELECT id FROM coordinates ORDER BY random() LIMIT 1),  -- random coordinates_id from existing coordinates
-            (SELECT id FROM location ORDER BY random() LIMIT 1)      -- random location_id from existing locations
-        );
-    END LOOP;
-END $$;
+INSERT INTO person (id, eye_color, hair_color, height, name, nationality, passport_id, weight, coordinates_id, location_id) SELECT
+    i,
+    CASE (floor(random() * 5))
+        WHEN 0 THEN 'GREEN'
+        WHEN 1 THEN 'BLACK'
+        WHEN 2 THEN 'BLUE'
+        WHEN 3 THEN 'ORANGE'
+        WHEN 4 THEN 'WHITE'
+    END,            -- random eye color
+    CASE (floor(random() * 5))
+        WHEN 0 THEN 'GREEN'
+        WHEN 1 THEN 'BLACK'
+        WHEN 2 THEN 'BLUE'
+        WHEN 3 THEN 'ORANGE'
+        WHEN 4 THEN 'WHITE'
+    END,            -- random hair color
+    (random() * 70 + 150),  -- height between 150 cm and 220 cm
+    'Person ' || i,           -- name
+    CASE (floor(random() * 4))
+        WHEN 0 THEN 'USA'
+        WHEN 1 THEN 'FRANCE'
+        WHEN 2 THEN 'CHINA'
+        WHEN 3 THEN 'NORTH_KOREA'
+    END,            -- random nationality
+    'P' || lpad(i::text, 7, '0'),  -- passport_id e.g., P0000001
+    (random() * 50 + 50),  -- weight between 50 kg and 100 kg
+    (SELECT id FROM coordinates ORDER BY random() LIMIT 1),  -- random coordinates_id from existing coordinates
+    (SELECT id FROM location ORDER BY random() LIMIT 1)-- random location_id from existing locations
+FROM generate_series(2000001, 3000000) i;
