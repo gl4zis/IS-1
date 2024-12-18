@@ -3,7 +3,7 @@ import {AuthStorageService} from './auth-storage.service';
 import {AuthRepository} from '../../repositories/auth.repository';
 import {LoginReq} from '../../models/auth/login.model';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
-import {JwtModel} from '../../models/auth/jwt.model';
+import {UserResponse} from '../../models/auth/user.response';
 import {RegisterReq} from '../../models/auth/register.model';
 import {ToastService} from '../toast.service';
 import {firstValueFrom} from 'rxjs';
@@ -24,7 +24,7 @@ export class AuthService {
 
   login(req: LoginReq) {
     this.repo.login(req).subscribe({
-      next: (res: JwtModel) => {
+      next: (res: UserResponse) => {
         if (res.token != undefined) {
           this.setAuth(req.login, res);
         }
@@ -38,7 +38,7 @@ export class AuthService {
 
   register(req: RegisterReq) {
     this.repo.register(req).subscribe({
-      next: (res: HttpResponse<JwtModel>) => {
+      next: (res: HttpResponse<UserResponse>) => {
         if (res.status === 201) {
           this.setAuth(req.login, res.body!);
         } else if (res.status === 202) {
@@ -57,10 +57,6 @@ export class AuthService {
     this.resetAuth();
   }
 
-  getLogin(): string | null {
-    return this.storage.getLogin();
-  }
-
   async checkAuth(): Promise<boolean> {
     try {
       await firstValueFrom(this.repo.check());
@@ -74,9 +70,10 @@ export class AuthService {
     return this.storage.hasToken();
   }
 
-  private setAuth(login: string, jwt: JwtModel): void {
+  private setAuth(login: string, jwt: UserResponse): void {
     this.storage.setLogin(login);
-    this.storage.setToken(jwt);
+    this.storage.setToken(jwt.token);
+    this.storage.setRole(jwt.role);
     this.router.navigate(['/table']);
   }
 

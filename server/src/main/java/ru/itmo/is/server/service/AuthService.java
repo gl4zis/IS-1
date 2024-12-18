@@ -8,7 +8,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import ru.itmo.is.server.dto.request.LoginRequest;
 import ru.itmo.is.server.dto.request.RegisterRequest;
-import ru.itmo.is.server.dto.response.JwtResponse;
+import ru.itmo.is.server.dto.response.UserResponse;
 import ru.itmo.is.server.entity.security.AdminRegistrationBid;
 import ru.itmo.is.server.entity.security.Role;
 import ru.itmo.is.server.entity.security.User;
@@ -30,7 +30,7 @@ public class AuthService {
     private JwtManager jwtManager;
 
     @Transactional
-    public Optional<JwtResponse> register(RegisterRequest req) {
+    public Optional<UserResponse> register(RegisterRequest req) {
         var user = mapper.toUser(req);
         if (isLoginBusy(user.getLogin()))
             throw new ConflictException("Login '" + user.getLogin() + "' is already in use");
@@ -39,19 +39,19 @@ public class AuthService {
                 .getSingleResult();
         if (user.getRole() == Role.USER || !isAdminsExist) {
             em.persist(user);
-            return Optional.of(new JwtResponse(jwtManager.createToken(user)));
+            return Optional.of(new UserResponse(jwtManager.createToken(user), user.getRole()));
         }
 
         em.persist(mapper.toBid(user));
         return Optional.empty();
     }
 
-    public JwtResponse login(LoginRequest req) {
+    public UserResponse login(LoginRequest req) {
         var user = em.find(User.class, req.getLogin());
         if (user == null || !user.getPassword().equals(mapper.hash384(req.getPassword())))
             throw new UnauthorizedException("Invalid login or password");
 
-        return new JwtResponse(jwtManager.createToken(user));
+        return new UserResponse(jwtManager.createToken(user), user.getRole());
     }
 
     public User getUser(String jwt) {

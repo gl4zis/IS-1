@@ -2,7 +2,7 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CheckboxModule} from 'primeng/checkbox';
 import {CardModule} from 'primeng/card';
-import {NgIf} from '@angular/common';
+import {Location, NgIf} from '@angular/common';
 import {Button} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {FloatLabelModule} from 'primeng/floatlabel';
@@ -12,6 +12,8 @@ import {LoginReq} from '../../../models/auth/login.model';
 import {RegisterReq} from '../../../models/auth/register.model';
 import {AuthService} from '../../../services/auth/auth.service';
 import {Role} from '../../../models/auth/role.model';
+import {AuthStorageService} from '../../../services/auth/auth-storage.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'authorization-page',
@@ -37,7 +39,9 @@ export class AuthorizationComponent {
   isAdmin = false;
 
   constructor(
-    public authService: AuthService
+    public authService: AuthService,
+    public authStorage: AuthStorageService,
+    public location: Location
   ) {
     this.form = {
       login: '',

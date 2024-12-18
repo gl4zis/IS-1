@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {JwtModel} from '../../models/auth/jwt.model';
+import {Role} from '../../models/auth/role.model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,36 +8,46 @@ export class AuthStorageService {
 
   private readonly TOKEN_KEY = 'jwt_token';
   private readonly LOGIN_KEY = 'login';
+  private readonly ROLE_KEY = 'role';
 
   constructor() { }
 
   reset(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.LOGIN_KEY);
+    localStorage.removeItem(this.ROLE_KEY);
   }
 
-  setToken(jwt: JwtModel): void {
-    if (jwt.token != null) {
-      localStorage.setItem(this.TOKEN_KEY, jwt.token);
-    }
+  setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
-  getToken(): JwtModel {
-    const token = localStorage.getItem(this.TOKEN_KEY);
-    return {
-      token: token === null ? undefined : token
-    };
+  getToken(): string | undefined {
+    return this.getItem(this.TOKEN_KEY);
   }
 
   setLogin(login: string): void {
     localStorage.setItem(this.LOGIN_KEY, login);
   }
 
-  getLogin(): string | null {
-    return localStorage.getItem(this.LOGIN_KEY);
+  getLogin(): string | undefined {
+    return this.getItem(this.LOGIN_KEY)
+  }
+
+  setRole(role: Role): void {
+    localStorage.setItem(this.ROLE_KEY, role);
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem(this.ROLE_KEY) === Role.ADMIN;
   }
 
   hasToken(): boolean {
-    return this.getToken().token != null;
+    return this.getToken() != null;
+  }
+
+  private getItem(key: string): string | undefined {
+    const item = localStorage.getItem(key);
+    return item ? item : undefined;
   }
 }

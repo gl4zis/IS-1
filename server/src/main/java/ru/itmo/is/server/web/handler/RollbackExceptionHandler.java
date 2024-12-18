@@ -1,4 +1,4 @@
-package ru.itmo.is.server.web;
+package ru.itmo.is.server.web.handler;
 
 import jakarta.transaction.RollbackException;
 import jakarta.ws.rs.WebApplicationException;

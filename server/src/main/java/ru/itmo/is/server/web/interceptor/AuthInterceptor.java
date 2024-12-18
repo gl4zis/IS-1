@@ -1,4 +1,4 @@
-package ru.itmo.is.server.web;
+package ru.itmo.is.server.web.interceptor;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ForbiddenException;
@@ -8,6 +8,7 @@ import jakarta.ws.rs.ext.Provider;
 import lombok.extern.log4j.Log4j2;
 import ru.itmo.is.server.exception.UnauthorizedException;
 import ru.itmo.is.server.service.AuthService;
+import ru.itmo.is.server.web.ActiveUserHolder;
 
 @Provider
 @Log4j2
@@ -26,7 +27,7 @@ public class AuthInterceptor implements ContainerRequestFilter {
         var method = context.getMethod();
         log.info("Accepted {} {}", method, path);
 
-        if (!path.startsWith("/auth") || path.startsWith("/auth/check")) {
+        if (!path.startsWith("/auth/login") && !path.startsWith("/auth/register")) {
             authIntercept(context);
             if (path.startsWith("/admin") && !activeUser.isAdmin())
                 throw new ForbiddenException("Permission denied");
