@@ -36,4 +36,8 @@ export class AuthStorageService {
   getLogin(): string | null {
     return localStorage.getItem(this.LOGIN_KEY);
   }
+
+  hasToken(): boolean {
+    return this.getToken().token != null;
+  }
 }

@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AuthStorageService} from './auth-storage.service';
 import {AuthRepository} from '../../repositories/auth.repository';
 import {LoginReq} from '../../models/auth/login.model';
@@ -6,30 +6,25 @@ import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {JwtModel} from '../../models/auth/jwt.model';
 import {RegisterReq} from '../../models/auth/register.model';
 import {ToastService} from '../toast.service';
-import {BehaviorSubject} from 'rxjs';
+import {firstValueFrom} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private authState: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  public isAuthenticated$ = this.authState.asObservable();
 
   constructor(
     private storage: AuthStorageService,
     private repo: AuthRepository,
     private toast: ToastService,
+    private router: Router
   ) {
-    this.repo.check().subscribe({
-      next: () => this.authState.next(true),
-      error: () => this.authState.next(false)
-    });
   }
 
   login(req: LoginReq) {
     this.repo.login(req).subscribe({
       next: (res: JwtModel) => {
-        console.log(res);
         if (res.token != undefined) {
           this.setAuth(req.login, res);
         }
@@ -62,18 +57,31 @@ export class AuthService {
     this.resetAuth();
   }
 
-  isAuthenticated(): boolean {
-    return this.authState.getValue();
+  getLogin(): string | null {
+    return this.storage.getLogin();
+  }
+
+  async checkAuth(): Promise<boolean> {
+    try {
+      await firstValueFrom(this.repo.check());
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  checkLogIn(): boolean {
+    return this.storage.hasToken();
   }
 
   private setAuth(login: string, jwt: JwtModel): void {
-    this.authState.next(true);
     this.storage.setLogin(login);
     this.storage.setToken(jwt);
+    this.router.navigate(['/table']);
   }
 
   private resetAuth(): void {
-    this.authState.next(false);
     this.storage.reset();
+    this.router.navigate(['/auth']);
   }
 }

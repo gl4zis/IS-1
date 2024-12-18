@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {ToastModule} from 'primeng/toast';
-import {CommonModule} from '@angular/common';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +9,4 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-
 }

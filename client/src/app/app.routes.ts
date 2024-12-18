@@ -1,16 +1,22 @@
 import {RouterModule, Routes} from '@angular/router';
-import {TableComponent} from './components/table/table.component';
-import {SpecialComponent} from './components/special/special.component';
 import {NgModule} from '@angular/core';
-import {AuthComponent} from './components/auth/auth.component';
 import {AuthGuard} from './interceptors/auth.guard';
+import {AuthorizationComponent} from './components/view/authorization/authorization.component';
+import {PersonComponent} from './components/view/person/person.component';
+import {AdminComponent} from './components/view/admin/admin.component';
+import {LocationComponent} from './components/view/location/location.component';
+import {CoordinatesComponent} from './components/view/coordinates/coordinates.component';
+import {SpecialComponent} from './components/view/special/special.component';
 
 export const routes: Routes = [
-  { path: 'auth', component: AuthComponent },
-  { path: 'table', component: TableComponent, canActivate: [AuthGuard] },
+  { path: 'auth', component: AuthorizationComponent },
+  { path: 'person', component: PersonComponent, canActivate: [AuthGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'location', component: LocationComponent, canActivate: [AuthGuard] },
+  { path: 'coordinates', component: CoordinatesComponent, canActivate: [AuthGuard] },
   { path: 'special', component: SpecialComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: "/auth", pathMatch: "full" },
-  { path: '**', redirectTo: "/auth" }
+  { path: '', redirectTo: "/person", pathMatch: "full" },
+  { path: '**', redirectTo: "/person" }
 ];
 
 @NgModule({
