@@ -1,0 +1,46 @@
+<div class="table-header">
+  <p-button>Add new</p-button>
+</div>
+<p-table [value]="data"
+         [columns]="tableConfig.columns"
+         styleClass="p-datatable-gridlines p-datatable-sm"
+         [paginator]="true"
+         [rows]="tableConfig.pageSize"
+         [first]="getFirstRowIndex()"
+         [lazy]="true"
+         (onLazyLoad)="updateData($event)"
+         [totalRecords]="count"
+         [customSort]="true"
+         (sortFunction)="updateData($event)"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col">
+        {{ col }} <p-sortIcon [field]="col"/>
+      </th>
+      <th></th>
+    </tr>
+    <tr>
+      <th *ngFor="let col of columns">
+        <input style="height: 34px" pInputText [(ngModel)]="filter.filters[col]" (input)="updateData()"/>
+      </th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-entity let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns">{{ entity[col] }}</td>
+      <td>
+        <div class="buttons" *ngIf="entity.accessible">
+          <p-button size="small" [outlined]="true">Edit</p-button>
+          <p-button size="small" [outlined]="true" severity="danger">Delete</p-button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4">No items found</td>
+    </tr>
+  </ng-template>
+</p-table>
