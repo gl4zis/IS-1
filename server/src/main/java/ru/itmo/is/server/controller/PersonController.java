@@ -30,6 +30,12 @@ public class PersonController {
         return Response.ok(personService.getFiltered(req)).build();
     }
 
+    @GET
+    @Path("/count")
+    public Response count() {
+        return Response.ok(personService.count()).build();
+    }
+
     @POST
     public Response createPerson(@Valid PersonRequest req) {
         personService.create(req);

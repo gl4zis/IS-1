@@ -28,6 +28,12 @@ public class LocationController {
         return Response.ok(locationService.getFiltered(req)).build();
     }
 
+    @GET
+    @Path("/count")
+    public Response count() {
+        return Response.ok(locationService.count()).build();
+    }
+
     @POST
     public Response createLocation(LocationRequest req) {
         locationService.create(req);

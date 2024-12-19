@@ -17,7 +17,7 @@ import {ProfileButtonComponent} from '../profile-button/profile-button.component
 export class NavHeaderComponent implements OnInit {
   pages?: MenuItem[];
 
-  constructor(private authStorage: AuthStorageService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.pages = [
@@ -42,7 +42,7 @@ export class NavHeaderComponent implements OnInit {
         icon: 'pi pi-lightbulb'
       }
     ];
-    if (this.authStorage.isAdmin()) {
+    if (this.authService.isAdmin()) {
       this.pages.push({
         label: 'Admin',
         url: '/admin',

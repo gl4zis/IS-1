@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CheckboxModule} from 'primeng/checkbox';
 import {CardModule} from 'primeng/card';
@@ -13,7 +13,6 @@ import {RegisterReq} from '../../../models/auth/register.model';
 import {AuthService} from '../../../services/auth/auth.service';
 import {Role} from '../../../models/auth/role.model';
 import {AuthStorageService} from '../../../services/auth/auth-storage.service';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'authorization-page',

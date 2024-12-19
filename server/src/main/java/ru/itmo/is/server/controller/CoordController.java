@@ -35,6 +35,12 @@ public class CoordController {
     }
 
     @GET
+    @Path("/count")
+    public Response count() {
+        return Response.ok(coordService.count()).build();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getCoord(@PathParam("id") @NotNull Integer id) {
         return Response.ok(coordService.get(id)).build();

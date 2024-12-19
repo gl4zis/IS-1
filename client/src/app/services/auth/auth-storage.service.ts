@@ -38,8 +38,8 @@ export class AuthStorageService {
     localStorage.setItem(this.ROLE_KEY, role);
   }
 
-  isAdmin(): boolean {
-    return localStorage.getItem(this.ROLE_KEY) === Role.ADMIN;
+  getRole(): string | undefined {
+    return this.getItem(this.ROLE_KEY);
   }
 
   hasToken(): boolean {

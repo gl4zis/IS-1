@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
+import {Location} from '@angular/common';
 import {
+  ActivatedRouteSnapshot,
   CanActivate,
   Router,
 } from '@angular/router';
@@ -13,10 +15,14 @@ export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
-  ) {
-  }
+    private location: Location,
+  ) {}
 
-  async canActivate(): Promise<boolean> {
+  async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
+    if (route.url[0].path === 'admin' && !this.authService.isAdmin()) {
+      this.location.back();
+      return false;
+    }
     if (await this.authService.checkAuth()) {
       return true;
     } else {

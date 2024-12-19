@@ -8,6 +8,7 @@ import {RegisterReq} from '../../models/auth/register.model';
 import {ToastService} from '../toast.service';
 import {firstValueFrom} from 'rxjs';
 import {Router} from '@angular/router';
+import {Role} from '../../models/auth/role.model';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,10 @@ export class AuthService {
 
   checkLogIn(): boolean {
     return this.storage.hasToken();
+  }
+
+  isAdmin(): boolean {
+    return this.storage.getRole() === Role.ADMIN;
   }
 
   private setAuth(login: string, jwt: UserResponse): void {

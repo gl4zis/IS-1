@@ -26,10 +26,9 @@ public class FilteredRequestValidator implements ConstraintValidator<ValidFilter
         var paginator = value.getPaginator();
         if (paginator.getPage() < 1 || paginator.getSize() < 0) return false;
 
-        var fields = value.getEClass().getDeclaredFields();
-
         var sorter = value.getSorter();
         if (sorter.getField() == null || sorter.getType() == null) return false;
+        var fields = value.getEClass().getDeclaredFields();
         var fieldNames = Arrays.stream(fields).map(Field::getName).collect(Collectors.toSet());
         fieldNames.addAll(ADDITIONAL_FIELDS);
         if (!fieldNames.contains(sorter.getField())) return false;
@@ -47,10 +46,6 @@ public class FilteredRequestValidator implements ConstraintValidator<ValidFilter
                             .map(Field::getName).collect(Collectors.toSet())
             );
         }
-        for (var field : filters.keySet()) {
-            if (filters.get(field) == null ||filters.get(field).isEmpty()) return false;
-            if (!filterFieldNames.contains(field)) return false;
-        }
-        return true;
+        return filterFieldNames.containsAll(filters.keySet());
     }
 }

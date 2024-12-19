@@ -30,6 +30,7 @@ public abstract class FilteredRequest {
         if (filters != null) {
             boolean hasWhere = false;
             for (var entry : filters.entrySet()) {
+                if (entry.getValue() == null || entry.getValue().isBlank()) continue;
                 if (hasWhere) queryBuilder.append(" AND ");
                 else {
                     queryBuilder.append(" WHERE ");
