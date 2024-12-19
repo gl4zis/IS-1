@@ -17,7 +17,8 @@ public class CORSInterceptor implements ContainerResponseFilter {
         resp.getHeaders().add("Access-Control-Allow-Headers", "Origin, Content-Type, X-Requested-With, Accept, Authorization");
         resp.getHeaders().add("Access-Control-Allow-Credentials", "true");
 
-        if (req.getHeaderString("Origin").contains("localhost")) {
+        String origin = req.getHeaderString("Origin");
+        if (origin != null && origin.contains("localhost")) {
             resp.getHeaders().add("Access-Control-Allow-Origin", "*");
         }
 

@@ -23,25 +23,30 @@ export class NavHeaderComponent implements OnInit {
     this.pages = [
       {
         label: 'Person',
-        url: '/person'
+        url: '/person',
+        icon: 'pi pi-face-smile'
       },
       {
         label: 'Location',
-        url: '/location'
+        url: '/location',
+        icon: 'pi pi-globe'
       },
       {
         label: 'Coordinates',
-        url: '/coordinates'
+        url: '/coordinates',
+        icon: 'pi pi-compass'
       },
       {
         label: 'Special',
-        url: '/special'
+        url: '/special',
+        icon: 'pi pi-lightbulb'
       }
     ];
     if (this.authStorage.isAdmin()) {
       this.pages.push({
         label: 'Admin',
-        url: '/admin'
+        url: '/admin',
+        icon: 'pi pi-lock'
       });
     }
   }

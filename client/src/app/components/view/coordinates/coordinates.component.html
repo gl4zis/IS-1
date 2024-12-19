@@ -1,1 +1,20 @@
 <nav-header/>
+
+<div [style]="{height: '500px', width: '700px'}">
+  <p-table [value]="coordinates" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template #header>
+      <tr>
+        <th>Id</th>
+        <th>X</th>
+        <th>Y</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-coord>
+      <tr>
+        <td>{{ coord.id }}</td>
+        <td>{{ coord.x }}</td>
+        <td>{{ coord.y }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
