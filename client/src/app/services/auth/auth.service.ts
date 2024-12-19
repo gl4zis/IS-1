@@ -30,10 +30,7 @@ export class AuthService {
           this.setAuth(req.login, res);
         }
       },
-      error: (error: HttpErrorResponse) => {
-        this.resetAuth();
-        this.toast.httpError(error);
-      }
+      error: () => this.resetAuth()
     });
   }
 
@@ -47,10 +44,7 @@ export class AuthService {
           this.toast.info('Accepted', 'Your application in process');
         }
       },
-      error: (error: HttpErrorResponse) => {
-        this.resetAuth();
-        this.toast.httpError(error);
-      }
+      error: () => this.resetAuth()
     });
   }
 

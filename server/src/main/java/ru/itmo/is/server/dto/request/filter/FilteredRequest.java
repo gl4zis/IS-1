@@ -3,6 +3,7 @@ package ru.itmo.is.server.dto.request.filter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @ValidFilteredRequest
+@ToString
 public abstract class FilteredRequest {
     private final Class<? extends AbstractEntity> eClass;
     private Paginator paginator = new Paginator();

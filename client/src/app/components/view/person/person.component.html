@@ -1,5 +1,10 @@
 <nav-header/>
 
 <div class="page">
-  <entity-table [tableConfig]="TABLE_CONFIG" [dataSource]="personRepo"/>
+  <entity-table [tableConfig]="TABLE_CONFIG"
+                [data]="data"
+                [count]="count"
+                (needRefresh)="loadData($event)"
+                (delete)="delete($event)"
+  />
 </div>

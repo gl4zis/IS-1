@@ -8,10 +8,8 @@ import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Filter, SortType} from '../../models/filter.model';
 import {environment} from '../../environment/environment';
-import {HttpErrorResponse} from '@angular/common/http';
-import {ToastService} from '../../services/toast.service';
-import {DataHolder, DataSource} from '../../repositories/dataSource';
-import {Entity} from '../../models/entity.model';
+import {Entity} from '../../models/entity/entity.model';
+import {count} from 'rxjs';
 
 export interface TableConfig {
   pageSize: number;
@@ -37,16 +35,16 @@ export interface TableConfig {
 })
 export class ServerSideEntityTableComponent implements OnInit {
   @Input() tableConfig!: TableConfig;
-  @Input() dataSource!: DataSource;
+  @Input() data!: Entity[];
+  @Input() count!: number;
 
   @Output() update: EventEmitter<Entity> = new EventEmitter();
   @Output() add: EventEmitter<void> = new EventEmitter();
   @Output() delete: EventEmitter<number> = new EventEmitter();
-
-  data: Entity[] = [];
-  count: number = 0;
+  @Output() needRefresh: EventEmitter<Filter> = new EventEmitter();
 
   nextRefreshWaitIdx?: any;
+  filtersUpdateIdx?: any;
 
   filter: Filter = {
     paginator: {
@@ -60,9 +58,6 @@ export class ServerSideEntityTableComponent implements OnInit {
     filters: {}
   };
 
-  constructor(private toast: ToastService) {
-  }
-
   ngOnInit() {
     this.filter.paginator.size = this.tableConfig.pageSize;
     this.filter.filters = this.tableConfig.columns
@@ -75,35 +70,29 @@ export class ServerSideEntityTableComponent implements OnInit {
   updateData($event?: TableLazyLoadEvent): void {
     if (this.nextRefreshWaitIdx) {
       clearTimeout(this.nextRefreshWaitIdx);
-      this.nextRefreshWaitIdx = undefined;
     }
     if ($event) {
       this.filter.paginator.page = ($event.first || 0) / this.tableConfig.pageSize + 1;
       this.filter.sorter.field = <string>$event.sortField || 'id';
       this.filter.sorter.type = ($event.sortOrder || 1) === 1 ? SortType.ASC : SortType.DESC;
     }
-    if (environment.dataRefreshInterval) {
-      this.nextRefreshWaitIdx = setTimeout(() => this.updateData(), environment.dataRefreshInterval);
-    }
-    this.loadData();
+    this.needRefresh.emit(this.filter);
+    this.nextRefreshWaitIdx = setTimeout(() => this.updateData(), environment.dataRefreshInterval);
   }
 
-  loadData(): void {
-    this.dataSource.getFiltered(this.filter).subscribe({
-      next: (holder: DataHolder) => {
-        this.data = holder.data;
-        this.count = holder.count;
-      },
-      error: (error: HttpErrorResponse) => this.toast.httpError(error)
-    });
+  filtersOnInput(): void {
+    if (this.filtersUpdateIdx) {
+      clearTimeout(this.filtersUpdateIdx);
+    }
+
+    this.filtersUpdateIdx = setTimeout(() => {
+      this.filter.paginator.page = 1;
+      this.updateData();
+    }, 500);
   }
 
   getFirstRowIndex(): number {
-    const firstRowIdx = (this.filter.paginator.page - 1) * this.filter.paginator.size;
-    if (firstRowIdx <= this.count) {
-      return firstRowIdx;
-    }
-    this.filter.paginator.page = this.count / this.filter.paginator.size + 1;
+    if (this.count == undefined) return 0;
     return (this.filter.paginator.page - 1) * this.filter.paginator.size;
   }
 }

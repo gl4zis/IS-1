@@ -22,7 +22,7 @@
     </tr>
     <tr>
       <th *ngFor="let col of columns">
-        <input style="height: 34px" pInputText [(ngModel)]="filter.filters[col]" (input)="updateData()"/>
+        <input style="height: 34px" pInputText [(ngModel)]="filter.filters[col]" (input)="filtersOnInput()"/>
       </th>
       <th style="width: 10%"></th>
     </tr>

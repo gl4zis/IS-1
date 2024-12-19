@@ -53,6 +53,7 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     }
 
     public List<RES> getFiltered(FilteredRequest req) {
+        System.out.println(req);
         return mapper.toDto(em.createQuery(req.toJPQL(), eClass).getResultList());
     }
 

@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations';
 import {AuthInterceptor} from './interceptors/auth.interceptor';
 
@@ -13,6 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     MessageService,
+    ConfirmationService,
     provideAnimations(),
     {
       provide: HTTP_INTERCEPTORS,
