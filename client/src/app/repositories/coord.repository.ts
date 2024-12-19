@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Coordinates} from '../models/entity/coordinates.model';
 import {Filter} from '../models/filter.model';
+import {FilteredCoordinates} from '../models/entity/filtered-response/filtered-coordinates.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,8 @@ export class CoordRepository {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Coordinates[]> {
-    return this.http.get<Coordinates[]>(`${this.api}`);
-  }
-
-  getFiltered(filter: Filter): Observable<Coordinates[]> {
-    return this.http.post<Coordinates[]>(`${this.api}/filtered`, filter);
+  getFiltered(filter: Filter): Observable<FilteredCoordinates> {
+    return this.http.post<FilteredCoordinates>(`${this.api}/filtered`, filter);
   }
 
   add(coord: Coordinates): Observable<void> {
@@ -31,9 +28,5 @@ export class CoordRepository {
 
   update(id: number, coord: Coordinates): Observable<void> {
     return this.http.put<void>(`${this.api}/${id}`, coord);
-  }
-
-  count(): Observable<number> {
-    return this.http.get<number>(`${this.api}/count`);
   }
 }

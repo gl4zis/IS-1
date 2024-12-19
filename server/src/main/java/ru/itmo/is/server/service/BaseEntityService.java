@@ -13,6 +13,7 @@ import ru.itmo.is.server.web.ActiveUserHolder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
@@ -51,12 +52,14 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
         em.merge(mapper.toEntity(req, find(id)));
     }
 
-    public long count() {
-        return em.createNamedQuery(eClass.getSimpleName() + ".count", Long.class).getSingleResult();
-    }
-
     public List<RES> getFiltered(FilteredRequest req) {
         return mapper.toDto(em.createQuery(req.toJPQL(), eClass).getResultList());
+    }
+
+    public int countFiltered(Map<String, String> filters) {
+        StringBuilder builder = new StringBuilder().append("SELECT COUNT(*) FROM ").append(eClass.getSimpleName());
+        FilteredRequest.filtersToJPQL(filters, builder);
+        return em.createQuery(builder.toString(), Long.class).getSingleResult().intValue();
     }
 
     protected E find(int id) {

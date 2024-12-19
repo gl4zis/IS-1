@@ -14,4 +14,5 @@ function createApiUrl(): string {
 
 export const environment = {
   api: createApiUrl(),
+  dataRefreshInterval: 1000 * 5
 };

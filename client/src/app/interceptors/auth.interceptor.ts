@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
             break;
           }
           case 403: {
-            this.toast.warn('Oops', 'Looks like you dont have permissions for this resource');
+            this.toast.warn('Oops', 'Looks like you don\'t have permissions for this resource');
             break;
           }
         }

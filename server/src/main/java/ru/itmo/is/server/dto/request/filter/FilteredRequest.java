@@ -28,33 +28,25 @@ public abstract class FilteredRequest {
     public String toJPQL() {
         var queryBuilder = new StringBuilder().append("FROM ").append(eClass.getSimpleName());
         if (filters != null) {
-            boolean hasWhere = false;
-            for (var entry : filters.entrySet()) {
-                if (entry.getValue() == null || entry.getValue().isBlank()) continue;
-                if (hasWhere) queryBuilder.append(" AND ");
-                else {
-                    queryBuilder.append(" WHERE ");
-                    hasWhere = true;
-                }
-
-                queryBuilder.append("LOWER(CAST(").append(entry.getKey()).append(" AS text))")
-                        .append(" like '%").append(entry.getValue().toLowerCase()).append("%'");
-            }
+            filtersToJPQL(filters, queryBuilder);
         }
         queryBuilder.append(" ").append(sorter.toSQL())
                 .append(" ").append(paginator.toSQL());
         return queryBuilder.toString();
     }
 
-    public void update(FilteredRequest newOne) {
-        if (newOne.paginator != null) {
-            paginator = newOne.paginator;
-        }
-        if (newOne.sorter != null) {
-            sorter = newOne.sorter;
-        }
-        if (newOne.filters != null) {
-            filters = newOne.filters;
+    public static void filtersToJPQL(Map<String, String> filters, StringBuilder builder) {
+        boolean hasWhere = false;
+        for (var entry : filters.entrySet()) {
+            if (entry.getValue() == null || entry.getValue().isBlank()) continue;
+            if (hasWhere) builder.append(" AND ");
+            else {
+                builder.append(" WHERE ");
+                hasWhere = true;
+            }
+
+            builder.append("LOWER(CAST(").append(entry.getKey()).append(" AS text))")
+                    .append(" like '%").append(entry.getValue().trim().toLowerCase()).append("%'");
         }
     }
 

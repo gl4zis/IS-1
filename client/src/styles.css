@@ -45,8 +45,8 @@
   .table-header {
     display: flex;
     justify-content: end;
-    margin-top: 50px;
     margin-bottom: 20px;
+    margin-right: 10px;
   }
 
   .buttons {
@@ -54,7 +54,6 @@
 
     * {
       margin-right: 5px;
-      width: 65px;
       height: 25px;
     }
   }

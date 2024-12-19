@@ -12,7 +12,6 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Getter
 @Setter
 @NamedQuery(name = "Location.findAll", query = "FROM Location")
-@NamedQuery(name = "Location.count", query = "SELECT COUNT(l) FROM Location l")
 public class Location extends AbstractEntity {
 
     @NotNull
