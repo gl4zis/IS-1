@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.PersonRequest;
 import ru.itmo.is.server.dto.request.RelinkRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredPersonRequest;
-import ru.itmo.is.server.dto.response.filtered.PersonFilteredResponse;
+import ru.itmo.is.server.dto.response.FilteredResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
 
@@ -30,7 +30,7 @@ public class PersonController {
     public Response getFilteredCoords(@NotNull @Valid FilteredPersonRequest req) {
         var people = personService.getFiltered(req);
         var count = personService.countFiltered(req.getFilters());
-        return Response.ok(new PersonFilteredResponse(people, count)).build();
+        return Response.ok(new FilteredResponse<>(people, count)).build();
     }
 
     @POST

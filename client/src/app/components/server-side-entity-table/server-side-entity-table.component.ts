@@ -1,30 +1,21 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Button} from 'primeng/button';
 import {FormsModule} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {NavHeaderComponent} from '../nav-header/nav-header.component';
 import {PrimeTemplate} from 'primeng/api';
 import {TableLazyLoadEvent, TableModule} from 'primeng/table';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {Filter, SortType} from '../../models/filter.model';
-import {Observable} from 'rxjs';
 import {environment} from '../../environment/environment';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastService} from '../../services/toast.service';
-import {Entity} from '../../models/entity/entity.model';
+import {DataHolder, DataSource} from '../../repositories/dataSource';
+import {Entity} from '../../models/entity.model';
 
 export interface TableConfig {
   pageSize: number;
   columns: string[];
-}
-
-export interface DataHolder {
-  data: Entity[];
-  count: number;
-}
-
-export interface DataSupplier {
-  getFiltered: (f: Filter) => Observable<DataHolder>
 }
 
 @Component({
@@ -38,14 +29,19 @@ export interface DataSupplier {
     PrimeTemplate,
     TableModule,
     NgForOf,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './server-side-entity-table.component.html',
   styleUrl: './server-side-entity-table.component.css'
 })
 export class ServerSideEntityTableComponent implements OnInit {
   @Input() tableConfig!: TableConfig;
-  @Input() dataSupplier!: DataSupplier;
+  @Input() dataSource!: DataSource;
+
+  @Output() update: EventEmitter<Entity> = new EventEmitter();
+  @Output() add: EventEmitter<void> = new EventEmitter();
+  @Output() delete: EventEmitter<number> = new EventEmitter();
 
   data: Entity[] = [];
   count: number = 0;
@@ -86,12 +82,14 @@ export class ServerSideEntityTableComponent implements OnInit {
       this.filter.sorter.field = <string>$event.sortField || 'id';
       this.filter.sorter.type = ($event.sortOrder || 1) === 1 ? SortType.ASC : SortType.DESC;
     }
-    this.nextRefreshWaitIdx = setTimeout(() => this.updateData(), environment.dataRefreshInterval);
+    if (environment.dataRefreshInterval) {
+      this.nextRefreshWaitIdx = setTimeout(() => this.updateData(), environment.dataRefreshInterval);
+    }
     this.loadData();
   }
 
   loadData(): void {
-    this.dataSupplier.getFiltered(this.filter).subscribe({
+    this.dataSource.getFiltered(this.filter).subscribe({
       next: (holder: DataHolder) => {
         this.data = holder.data;
         this.count = holder.count;

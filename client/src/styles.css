@@ -41,20 +41,4 @@
   margin-right: auto;
   overflow: hidden;
   max-width: 80%;
-
-  .table-header {
-    display: flex;
-    justify-content: end;
-    margin-bottom: 20px;
-    margin-right: 10px;
-  }
-
-  .buttons {
-    display: flex;
-
-    * {
-      margin-right: 5px;
-      height: 25px;
-    }
-  }
 }

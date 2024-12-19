@@ -1,5 +1,5 @@
 <div class="table-header">
-  <p-button>Add new</p-button>
+  <p-button (click)="add.emit()">Add new</p-button>
 </div>
 <p-table [value]="data"
          [columns]="tableConfig.columns"
@@ -15,7 +15,7 @@
 >
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col">
+      <th *ngFor="let col of columns" [pSortableColumn]="col" style="width: 10%">
         {{ col }} <p-sortIcon [field]="col"/>
       </th>
       <th></th>
@@ -24,16 +24,26 @@
       <th *ngFor="let col of columns">
         <input style="height: 34px" pInputText [(ngModel)]="filter.filters[col]" (input)="updateData()"/>
       </th>
-      <th></th>
+      <th style="width: 10%"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-entity let-columns="columns">
-    <tr>
+    <tr [ngClass]="{'row-no-access': !entity.accessible}">
       <td *ngFor="let col of columns">{{ entity[col] }}</td>
       <td>
-        <div class="buttons" *ngIf="entity.accessible">
-          <p-button size="small" [outlined]="true">Edit</p-button>
-          <p-button size="small" [outlined]="true" severity="danger">Delete</p-button>
+        <div style="min-width: 160px" *ngIf="entity.accessible" class="buttons">
+          <p-button size="small" [outlined]="true"
+                    [style]="{height: '25px'}"
+                    (click)="update.emit(entity)"
+          >
+            Edit
+          </p-button>
+          <p-button size="small" [outlined]="true"
+                    [style]="{height: '25px'}" severity="danger"
+                    (click)="delete.emit(entity.id)"
+          >
+            Delete
+          </p-button>
         </div>
       </td>
     </tr>

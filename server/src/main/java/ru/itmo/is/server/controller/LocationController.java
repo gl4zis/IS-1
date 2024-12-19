@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.LocationRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredLocationRequest;
-import ru.itmo.is.server.dto.response.filtered.LocationFilteredResponse;
+import ru.itmo.is.server.dto.response.FilteredResponse;
 import ru.itmo.is.server.service.LocationService;
 
 @Path("/location")
@@ -28,7 +28,7 @@ public class LocationController {
     public Response getFilteredCoords(@NotNull @Valid FilteredLocationRequest req) {
         var locations = locationService.getFiltered(req);
         var count = locationService.countFiltered(req.getFilters());
-        return Response.ok(new LocationFilteredResponse(locations, count)).build();
+        return Response.ok(new FilteredResponse<>(locations, count)).build();
     }
 
     @POST

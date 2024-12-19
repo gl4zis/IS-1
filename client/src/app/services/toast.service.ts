@@ -13,6 +13,7 @@ export class ToastService {
       this.warn(error.statusText, error.error);
     } else {
       this.error('XXX', 'Something went wrong');
+      console.error(error);
     }
   }
 

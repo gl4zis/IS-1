@@ -1,7 +1,3 @@
-import {Coordinates} from './entity/coordinates.model';
-import {Location} from './entity/location.model';
-import {Person} from './entity/person.model';
-
 export interface Paginator {
   page: number;
   size: number;
