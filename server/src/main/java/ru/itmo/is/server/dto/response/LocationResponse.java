@@ -9,4 +9,5 @@ import ru.itmo.is.server.dto.LocationDto;
 public class LocationResponse extends LocationDto {
     private Integer id;
     private boolean accessible;
+    private boolean adminAccess;
 }

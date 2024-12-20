@@ -1,0 +1,44 @@
+<p-dialog [header]="isNew ? 'Create coordinates' : 'Edit coordinates'" [modal]="true" [(visible)]="visible" [closable]="false">
+  <div class="input">
+    <p-floatLabel>
+      <input pInputText
+             id="x"
+             type="number"
+             required
+             pattern="\d*"
+             [(ngModel)]="coordinates.x"
+             #x="ngModel"/>
+      <label for="x">X</label>
+    </p-floatLabel>
+    <div class="error" *ngIf="x.invalid && (x.touched || x.dirty)">
+      <span *ngIf="Number(y.value) !== y.value">X should be an integer</span>
+    </div>
+  </div>
+  <div class="input">
+    <p-floatLabel>
+      <input pInputText
+             id="y"
+             type="number"
+             required
+             min="-725"
+             [(ngModel)]="coordinates.y"
+             #y="ngModel"/>
+      <label for="y">Y</label>
+    </p-floatLabel>
+    <div class="error" *ngIf="y.invalid && (y.touched || y.dirty)">
+      <span *ngIf="y.value < -725">Y should be more than -725</span>
+      <span *ngIf="Number(y.value) !== y.value">Y cannot be empty</span>
+    </div>
+  </div>
+  <div *ngIf="isNew" class="input center">
+    <p-checkbox
+      id="admin-access"
+      [(ngModel)]="coordinates.adminAccess"
+      [binary]="true"/>
+    <label for="admin-access" style="margin-left: 5px;">Access edit for admins?</label>
+  </div>
+  <div class="form-buttons">
+    <p-button severity="danger" [outlined]="true" size="small" (click)="onClose()">Cancel</p-button>
+    <p-button size="small" (click)="onSave()" [disabled]="x.invalid || y.invalid">Save</p-button>
+  </div>
+</p-dialog>

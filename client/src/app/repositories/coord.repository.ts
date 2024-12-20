@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {Filter} from '../models/filter.model';
 import {Coordinates} from '../models/entity/coordinates.model';
 import {FilteredResponse} from '../models/entity/filtered-response';
+import {CoordForm} from '../models/forms/coord.form';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CoordRepository {
     return this.http.post<FilteredResponse>(`${this.api}/filtered`, filter);
   }
 
-  add(coord: Coordinates): Observable<void> {
+  add(coord: CoordForm): Observable<void> {
     return this.http.post<void>(`${this.api}`, coord);
   }
 
@@ -26,7 +27,7 @@ export class CoordRepository {
     return this.http.delete<void>(`${this.api}/${id}`);
   }
 
-  update(id: number, coord: Coordinates): Observable<void> {
+  update(id: number, coord: CoordForm): Observable<void> {
     return this.http.put<void>(`${this.api}/${id}`, coord);
   }
 }

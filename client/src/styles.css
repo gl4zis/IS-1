@@ -42,3 +42,12 @@
   overflow: hidden;
   max-width: 80%;
 }
+
+.form-buttons {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-evenly;
+}
+

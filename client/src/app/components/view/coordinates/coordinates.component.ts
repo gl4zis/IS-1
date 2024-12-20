@@ -14,11 +14,12 @@ import {
 } from '../../server-side-entity-table/server-side-entity-table.component';
 import {ConfirmationService} from 'primeng/api';
 import {ToastService} from '../../../services/toast.service';
-import {HttpErrorResponse} from '@angular/common/http';
 import {Filter} from '../../../models/filter.model';
-import {Entity} from '../../../models/entity/entity.model';
 import {FilteredResponse} from '../../../models/entity/filtered-response';
 import {Coordinates} from '../../../models/entity/coordinates.model';
+import {CoordinatesFormComponent} from '../../coordinates-form/coordinates-form.component';
+import {CoordForm} from '../../../models/forms/coord.form';
+import {Entity} from '../../../models/entity/entity.model';
 
 @Component({
   selector: 'coordinates-page',
@@ -31,7 +32,8 @@ import {Coordinates} from '../../../models/entity/coordinates.model';
     FormsModule,
     StyleClassModule,
     IconFieldModule,
-    ServerSideEntityTableComponent
+    ServerSideEntityTableComponent,
+    CoordinatesFormComponent
   ],
   templateUrl: './coordinates.component.html'
 })
@@ -45,13 +47,19 @@ export class CoordinatesComponent {
   count!: number;
   lastTableFilters!: Filter;
 
+  form = {
+    visible: false,
+    coord: new CoordForm(),
+    id: 0
+  };
+
   constructor(
     private coordRepo: CoordRepository,
     private confirmation: ConfirmationService,
     private toast: ToastService,
   ) {}
 
-  delete(id: number) {
+  delete(id: number): void {
     this.confirmation.confirm({
       header: 'Delete confirmation',
       message: 'Are you sure you want to delete this entity?',
@@ -65,6 +73,29 @@ export class CoordinatesComponent {
         });
       }
     });
+  }
+
+  add(): void {
+    this.form.coord = new CoordForm();
+    this.form.id = 0;
+    this.form.visible = true;
+  }
+
+  onFormSave(coord: CoordForm): void {
+    if (this.form.id) {
+      this.coordRepo.update(this.form.id, coord)
+        .subscribe(() => this.toast.success('Success', 'Coordinates was updated'));
+    } else {
+      this.coordRepo.add(coord)
+        .subscribe(() => this.toast.success('Success', 'Coordinates was added'));
+    }
+    this.loadData(this.lastTableFilters);
+  }
+
+  edit(coord: Entity): void {
+    this.form.coord = new CoordForm(<Coordinates>coord);
+    this.form.id = coord.id;
+    this.form.visible = true;
   }
 
   loadData(filter: Filter): void {

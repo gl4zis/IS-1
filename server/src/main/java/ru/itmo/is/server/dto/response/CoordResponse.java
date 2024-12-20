@@ -8,4 +8,5 @@ import ru.itmo.is.server.dto.CoordDto;
 public class CoordResponse extends CoordDto {
     private Integer id;
     private boolean accessible;
+    private boolean adminAccess;
 }
