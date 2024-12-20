@@ -1,4 +1,4 @@
-<p-dialog [header]="isNew ? 'Create coordinates' : 'Edit coordinates'" [modal]="true" [(visible)]="visible" [closable]="false">
+<p-dialog [header]="isNew ? 'Create location' : 'Edit location'" [modal]="true" [(visible)]="visible" [closable]="false">
   <div class="input">
     <p-floatLabel>
       <input pInputText
@@ -10,8 +10,8 @@
       <label for="name">Name</label>
     </p-floatLabel>
     <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
-      <span *ngIf="!name.value">Name cannot be empty</span>
-      <span *ngIf="name.value.length > 312">Name cannot be longer 312 symbols</span>
+      <div *ngIf="!name.value">Name cannot be empty</div>
+      <div *ngIf="name.value.length > 312">Name cannot be longer 312 symbols</div>
     </div>
   </div>
   <div class="input">
@@ -26,7 +26,7 @@
       <label for="x">X</label>
     </p-floatLabel>
     <div class="error" *ngIf="x.invalid && (x.touched || x.dirty)">
-      <span *ngIf="Number(y.value) !== y.value">X should be an integer</span>
+      <div *ngIf="Number(y.value) !== y.value">X should be an integer</div>
     </div>
   </div>
   <div class="input">
@@ -41,7 +41,7 @@
       <label for="y">Y</label>
     </p-floatLabel>
     <div class="error" *ngIf="y.invalid && (y.touched || y.dirty)">
-      <span *ngIf="Number(y.value) !== y.value">Y cannot be empty</span>
+      <div *ngIf="Number(y.value) !== y.value">Y cannot be empty</div>
     </div>
   </div>
   <div *ngIf="isNew" class="input center">

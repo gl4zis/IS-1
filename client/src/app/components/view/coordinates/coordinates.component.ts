@@ -84,11 +84,15 @@ export class CoordinatesComponent {
   onFormSave(coord: CoordForm): void {
     if (this.form.id) {
       this.coordRepo.update(this.form.id, coord)
-        .subscribe(() => this.toast.success('Success', 'Coordinates was updated'));
+        .subscribe(() => this.successSubscribe(false));
     } else {
       this.coordRepo.add(coord)
-        .subscribe(() => this.toast.success('Success', 'Coordinates was added'));
+        .subscribe(() => this.successSubscribe(true));
     }
+  }
+
+  successSubscribe(isNew: boolean): void {
+    this.toast.success('Success', 'Coordinates was ' + isNew ? 'added' : 'updated');
     this.loadData(this.lastTableFilters);
   }
 

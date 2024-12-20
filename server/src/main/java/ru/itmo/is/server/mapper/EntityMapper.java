@@ -21,9 +21,7 @@ public abstract class EntityMapper<E extends AbstractEntity, REQ, RES> {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "createdBy", ignore = true),
-            @Mapping(target = "createdAt", ignore = true),
-            @Mapping(target = "removedBy", ignore = true),
-            @Mapping(target = "removedAt", ignore = true)
+            @Mapping(target = "createdAt", ignore = true)
     })
     public abstract E toEntity(REQ req);
 

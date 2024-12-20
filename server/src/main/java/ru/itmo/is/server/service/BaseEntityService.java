@@ -7,11 +7,10 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest;
+import ru.itmo.is.server.dto.response.SelectResponse;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 import ru.itmo.is.server.mapper.EntityMapper;
-import ru.itmo.is.server.web.ActiveUserHolder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,13 +20,7 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     protected EntityManager em;
     @Inject
     protected EntityMapper<E, REQ, RES> mapper;
-    @Inject
-    protected ActiveUserHolder userHolder;
     private final Class<E> eClass;
-
-    public List<RES> getAll() {
-        return mapper.toDto(em.createNamedQuery(eClass.getSimpleName() + ".findAll", eClass).getResultList());
-    }
 
     public RES get(int id) {
         return mapper.toDto(find(id));
@@ -41,9 +34,6 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     @Transactional
     public void delete(int id) {
         var entity = find(id);
-        entity.setRemovedAt(LocalDateTime.now());
-        entity.setRemovedBy(userHolder.get());
-        em.merge((AbstractEntity) entity);
         em.remove(entity);
     }
 
@@ -53,7 +43,6 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     }
 
     public List<RES> getFiltered(FilteredRequest req) {
-        System.out.println(req);
         return mapper.toDto(em.createQuery(req.toJPQL(), eClass).getResultList());
     }
 
@@ -63,13 +52,15 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
         return em.createQuery(builder.toString(), Long.class).getSingleResult().intValue();
     }
 
+    public List<SelectResponse> getForSelect() {
+        return em.createQuery("SELECT new ru.itmo.is.server.dto.response.SelectResponse(e.id, e.name)" +
+                        " FROM " + eClass.getSimpleName() + " e ORDER BY e.name", SelectResponse.class)
+                .getResultList();
+    }
+
     protected E find(int id) {
         var e = em.find(eClass, id);
         if (e == null) throw new NotFoundException();
         return e;
-    }
-
-    protected List<E> findAll() {
-        return em.createNamedQuery(eClass.getSimpleName() + ".findAll", eClass).getResultList();
     }
 }

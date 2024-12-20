@@ -18,11 +18,6 @@ public class LocationController {
     @Inject
     private LocationService locationService;
 
-    @GET
-    public Response getAllLocations() {
-        return Response.ok(locationService.getAll()).build();
-    }
-
     @POST
     @Path("/filtered")
     public Response getFilteredCoords(@NotNull @Valid FilteredLocationRequest req) {
@@ -59,8 +54,13 @@ public class LocationController {
 
     @GET
     @Path("/{id}/linked-people")
-    public Response getLinkedPeople(@PathParam("id") @NotNull Integer id, @QueryParam("enriched") boolean enriched) {
-        return enriched ? Response.ok(locationService.getLinkedPeople(id)).build() :
-                Response.ok(locationService.getLinkedPeopleIds(id)).build();
+    public Response getLinkedPeople(@PathParam("id") @NotNull Integer id) {
+        return Response.ok(locationService.getLinkedPeople(id)).build();
+    }
+
+    @GET
+    @Path("/select")
+    public Response getForSelect() {
+        return Response.ok(locationService.getForSelect()).build();
     }
 }

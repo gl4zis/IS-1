@@ -2,7 +2,6 @@ package ru.itmo.is.server.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.NamedQuery;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Entity
 @Getter
 @Setter
-@NamedQuery(name = "Coordinates.findAll", query = "FROM Coordinates")
 public class Coordinates extends AbstractEntity implements Comparable<Coordinates> {
 
     @Column(nullable = false)

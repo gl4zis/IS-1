@@ -13,6 +13,8 @@ import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
 
+import java.util.List;
+
 @ApplicationScoped
 public class PersonService extends BaseEntityService<Person, PersonRequest, PersonResponse> {
     public PersonService() {
@@ -59,18 +61,20 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
     }
 
     @Transactional
-    public void relink(int personId, RelinkRequest req) {
-        var p = find(personId);
-        var c = em.find(Coordinates.class, req.getCoordId());
-        if (c == null) throw new NotFoundException("Coordinates not found");
-        p.setCoordinates(c);
-        p.setLocation(null);
-        if (req.getLocationId() != null) {
-            var l = em.find(Location.class, req.getLocationId());
-            if (l == null) throw new NotFoundException("Location not found");
-            p.setLocation(l);
-        }
-        em.merge(p);
+    public void relink(List<RelinkRequest> req) {
+        req.forEach(relink -> {
+            var p = find(relink.getPersonId());
+            var c = em.find(Coordinates.class, relink.getCoordId());
+            if (c == null) throw new NotFoundException("Coordinates not found");
+            p.setCoordinates(c);
+            p.setLocation(null);
+            if (relink.getLocationId() != null) {
+                var l = em.find(Location.class, relink.getLocationId());
+                if (l == null) throw new NotFoundException("Location not found");
+                p.setLocation(l);
+            }
+            em.merge(p);
+        });
     }
     
     private Person toEntity(PersonRequest req, @Nullable Person origin) {

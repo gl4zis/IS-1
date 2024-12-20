@@ -11,7 +11,6 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Entity
 @Getter
 @Setter
-@NamedQuery(name = "Location.findAll", query = "FROM Location")
 public class Location extends AbstractEntity {
 
     @NotNull

@@ -12,16 +12,13 @@ import {
   TableConfig
 } from '../../server-side-entity-table/server-side-entity-table.component';
 import {Location} from '../../../models/entity/location.model';
-import {HttpErrorResponse} from '@angular/common/http';
 import {Filter} from '../../../models/filter.model';
 import {FilteredResponse} from '../../../models/entity/filtered-response';
 import {ToastService} from '../../../services/toast.service';
 import {LocationFormComponent} from '../../location-form/location-form.component';
 import {CoordinatesFormComponent} from '../../coordinates-form/coordinates-form.component';
 import {LocationForm} from '../../../models/forms/location.form';
-import {CoordForm} from '../../../models/forms/coord.form';
 import {Entity} from '../../../models/entity/entity.model';
-import {Coordinates} from '../../../models/entity/coordinates.model';
 
 @Component({
   selector: 'location-page',
@@ -86,17 +83,21 @@ export class LocationComponent {
   onFormSave(location: LocationForm): void {
     if (this.form.id) {
       this.locationRepo.update(this.form.id, location)
-        .subscribe(() => this.toast.success('Success', 'Location was updated'));
+        .subscribe(() => this.successSubscribe(false));
     } else {
       this.locationRepo.add(location)
-        .subscribe(() => this.toast.success('Success', 'Coordinates was added'));
+        .subscribe(() => this.successSubscribe(true));
     }
+  }
+
+  successSubscribe(isNew: boolean): void {
+    this.toast.success('Success', 'Location was ' + isNew ? 'added' : 'updated');
     this.loadData(this.lastTableFilters);
   }
 
-  edit(coord: Entity): void {
-    this.form.location = new LocationForm(<Location>coord);
-    this.form.id = coord.id;
+  edit(location: Entity): void {
+    this.form.location = new LocationForm(<Location>location);
+    this.form.id = location.id;
     this.form.visible = true;
   }
 

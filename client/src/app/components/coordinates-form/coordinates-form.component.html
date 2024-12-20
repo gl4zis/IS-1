@@ -11,7 +11,7 @@
       <label for="x">X</label>
     </p-floatLabel>
     <div class="error" *ngIf="x.invalid && (x.touched || x.dirty)">
-      <span *ngIf="Number(y.value) !== y.value">X should be an integer</span>
+      <div *ngIf="Number(y.value) !== y.value">X should be an integer</div>
     </div>
   </div>
   <div class="input">
@@ -26,8 +26,8 @@
       <label for="y">Y</label>
     </p-floatLabel>
     <div class="error" *ngIf="y.invalid && (y.touched || y.dirty)">
-      <span *ngIf="y.value < -725">Y should be more than -725</span>
-      <span *ngIf="Number(y.value) !== y.value">Y cannot be empty</span>
+      <div *ngIf="y.value < -725">Y should be more than -725</div>
+      <div *ngIf="Number(y.value) !== y.value">Y cannot be empty</div>
     </div>
   </div>
   <div *ngIf="isNew" class="input center">

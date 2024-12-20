@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 public class RelinkRequest {
     @NotNull
+    private Integer personId;
+    @NotNull
     private Integer coordId;
     private Integer locationId;
 }

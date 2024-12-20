@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Filter} from '../models/filter.model';
 import {map, Observable} from 'rxjs';
 import {FilteredResponse} from '../models/entity/filtered-response';
-import {Person} from '../models/entity/person.model';
+import {PersonForm} from '../models/forms/person.form';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class PersonRepository {
     );
   }
 
-  add(person: Person): Observable<void> {
+  add(person: PersonForm): Observable<void> {
     return this.http.post<void>(`${this.api}`, person);
   }
 
@@ -33,7 +33,7 @@ export class PersonRepository {
     return this.http.delete<void>(`${this.api}/${id}`);
   }
 
-  update(id: number, location: Person): Observable<void> {
+  update(id: number, location: PersonForm): Observable<void> {
     return this.http.put<void>(`${this.api}/${id}`, location);
   }
 }

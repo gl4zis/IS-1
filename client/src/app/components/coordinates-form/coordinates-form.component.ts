@@ -7,7 +7,6 @@ import {NgIf} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {Button} from 'primeng/button';
 import {CheckboxModule} from 'primeng/checkbox';
-import {LoginReq} from '../../models/auth/login.model';
 
 @Component({
   selector: 'coordinates-form',

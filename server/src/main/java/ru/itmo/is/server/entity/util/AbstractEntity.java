@@ -30,13 +30,6 @@ public abstract class AbstractEntity {
     @Column(name = "admin_access", nullable = false, updatable = false)
     private boolean adminAccess;
 
-    @ManyToOne
-    @JoinColumn(name = "removed_by", referencedColumnName = "login")
-    private User removedBy;
-
-    @Column(name = "removed_at")
-    private LocalDateTime removedAt;
-
     @OneToMany
     @JoinColumn(name = "id", referencedColumnName = "id")
     private List<EntityHistory> history;

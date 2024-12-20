@@ -18,11 +18,6 @@ public class CoordController {
     @Inject
     private CoordService coordService;
 
-    @GET
-    public Response getAllCoords() {
-        return Response.ok(coordService.getAll()).build();
-    }
-
     @POST
     @Path("/filtered")
     public Response getFilteredCoords(@NotNull @Valid FilteredCoordRequest req) {
@@ -59,8 +54,13 @@ public class CoordController {
 
     @GET
     @Path("/{id}/linked-people")
-    public Response getLinkedPeople(@PathParam("id") @NotNull Integer id, @QueryParam("enriched") boolean enriched) {
-        return enriched ? Response.ok(coordService.getLinkedPeople(id)).build() :
-                Response.ok(coordService.getLinkedPeopleIds(id)).build();
+    public Response getLinkedPeople(@PathParam("id") @NotNull Integer id) {
+        return Response.ok(coordService.getLinkedPeople(id)).build();
+    }
+
+    @GET
+    @Path("/select")
+    public Response getForSelect() {
+        return Response.ok(coordService.getForSelect()).build();
     }
 }

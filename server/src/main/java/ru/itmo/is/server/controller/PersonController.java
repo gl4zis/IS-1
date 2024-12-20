@@ -13,17 +13,14 @@ import ru.itmo.is.server.dto.response.FilteredResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
 
+import java.util.List;
+
 @Path("/person")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PersonController {
     @Inject
     private PersonService personService;
-
-    @GET
-    public Response getAllPeople() {
-        return Response.ok(personService.getAll()).build();
-    }
 
     @POST
     @Path("/filtered")
@@ -88,9 +85,9 @@ public class PersonController {
     }
 
     @PUT
-    @Path("/{id}/relink")
-    public Response relink(@PathParam("id") @NotNull Integer id, @Valid @NotNull RelinkRequest req) {
-        personService.relink(id, req);
+    @Path("/relink")
+    public Response relink(@Valid @NotNull List<RelinkRequest> req) {
+        personService.relink(req);
         return Response.ok().build();
     }
 }
