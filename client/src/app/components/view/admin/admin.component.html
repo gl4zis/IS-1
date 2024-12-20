@@ -1,1 +1,13 @@
 <nav-header/>
+
+<div class="page">
+  <div class="card-container">
+    <div class="card" *ngFor="let login of bids">
+      <div><h2>{{ login }}</h2></div>
+      <div class="form-buttons">
+        <p-button size="small" severity="danger" [outlined]="true" (click)="reject(login)">Reject</p-button>
+        <p-button size="small" (click)="accept(login)">Accept</p-button>
+      </div>
+    </div>
+  </div>
+</div>

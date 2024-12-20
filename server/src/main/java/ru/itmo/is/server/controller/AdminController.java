@@ -20,7 +20,7 @@ public class AdminController {
         return Response.ok(authService.getBids()).build();
     }
 
-    @GET
+    @POST
     @Path("/bid/accept")
     public Response acceptBid(@QueryParam("login") @NotNull String login) {
         authService.acceptBid(login);
