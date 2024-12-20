@@ -1,0 +1,58 @@
+<p-dialog [header]="isNew ? 'Create coordinates' : 'Edit coordinates'" [modal]="true" [(visible)]="visible" [closable]="false">
+  <div class="input">
+    <p-floatLabel>
+      <input pInputText
+             id="name"
+             required
+             maxlength="312"
+             [(ngModel)]="location.name"
+             #name="ngModel"/>
+      <label for="name">Name</label>
+    </p-floatLabel>
+    <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
+      <span *ngIf="!name.value">Name cannot be empty</span>
+      <span *ngIf="name.value.length > 312">Name cannot be longer 312 symbols</span>
+    </div>
+  </div>
+  <div class="input">
+    <p-floatLabel>
+      <input pInputText
+             id="x"
+             type="number"
+             required
+             pattern="\d*"
+             [(ngModel)]="location.x"
+             #x="ngModel"/>
+      <label for="x">X</label>
+    </p-floatLabel>
+    <div class="error" *ngIf="x.invalid && (x.touched || x.dirty)">
+      <span *ngIf="Number(y.value) !== y.value">X should be an integer</span>
+    </div>
+  </div>
+  <div class="input">
+    <p-floatLabel>
+      <input pInputText
+             id="y"
+             type="number"
+             required
+             min="-725"
+             [(ngModel)]="location.y"
+             #y="ngModel"/>
+      <label for="y">Y</label>
+    </p-floatLabel>
+    <div class="error" *ngIf="y.invalid && (y.touched || y.dirty)">
+      <span *ngIf="Number(y.value) !== y.value">Y cannot be empty</span>
+    </div>
+  </div>
+  <div *ngIf="isNew" class="input center">
+    <p-checkbox
+      id="admin-access"
+      [(ngModel)]="location.adminAccess"
+      [binary]="true"/>
+    <label for="admin-access" style="margin-left: 5px;">Access edit for admins?</label>
+  </div>
+  <div class="form-buttons">
+    <p-button severity="danger" [outlined]="true" size="small" (click)="onClose()">Cancel</p-button>
+    <p-button size="small" (click)="onSave()" [disabled]="name.invalid || x.invalid || y.invalid">Save</p-button>
+  </div>
+</p-dialog>

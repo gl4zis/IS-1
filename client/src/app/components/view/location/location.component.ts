@@ -16,6 +16,12 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Filter} from '../../../models/filter.model';
 import {FilteredResponse} from '../../../models/entity/filtered-response';
 import {ToastService} from '../../../services/toast.service';
+import {LocationFormComponent} from '../../location-form/location-form.component';
+import {CoordinatesFormComponent} from '../../coordinates-form/coordinates-form.component';
+import {LocationForm} from '../../../models/forms/location.form';
+import {CoordForm} from '../../../models/forms/coord.form';
+import {Entity} from '../../../models/entity/entity.model';
+import {Coordinates} from '../../../models/entity/coordinates.model';
 
 @Component({
   selector: 'location-page',
@@ -27,7 +33,9 @@ import {ToastService} from '../../../services/toast.service';
     InputTextModule,
     PrimeTemplate,
     TableModule,
-    ServerSideEntityTableComponent
+    ServerSideEntityTableComponent,
+    LocationFormComponent,
+    CoordinatesFormComponent
   ],
   templateUrl: './location.component.html'
 })
@@ -41,13 +49,19 @@ export class LocationComponent {
   count!: number;
   lastTableFilters!: Filter;
 
+  form = {
+    visible: false,
+    location: new LocationForm(),
+    id: 0
+  };
+
   constructor(
     private locationRepo: LocationRepository,
     private confirmation: ConfirmationService,
     private toast: ToastService,
   ) {}
 
-  delete(id: number) {
+  delete(id: number): void {
     this.confirmation.confirm({
       header: 'Delete confirmation',
       message: 'Are you sure you want to delete this entity?',
@@ -61,6 +75,29 @@ export class LocationComponent {
         });
       }
     });
+  }
+
+  add(): void {
+    this.form.location = new LocationForm();
+    this.form.id = 0;
+    this.form.visible = true;
+  }
+
+  onFormSave(location: LocationForm): void {
+    if (this.form.id) {
+      this.locationRepo.update(this.form.id, location)
+        .subscribe(() => this.toast.success('Success', 'Location was updated'));
+    } else {
+      this.locationRepo.add(location)
+        .subscribe(() => this.toast.success('Success', 'Coordinates was added'));
+    }
+    this.loadData(this.lastTableFilters);
+  }
+
+  edit(coord: Entity): void {
+    this.form.location = new LocationForm(<Location>coord);
+    this.form.id = coord.id;
+    this.form.visible = true;
   }
 
   loadData(filter: Filter): void {

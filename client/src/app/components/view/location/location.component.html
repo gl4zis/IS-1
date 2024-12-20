@@ -6,5 +6,11 @@
                 [count]="count"
                 (needRefresh)="loadData($event)"
                 (delete)="delete($event)"
-  />
+                (add)="add()"
+                (update)="edit($event)"/>
 </div>
+
+<location-form [(visible)]="form.visible"
+               [location]="form.location"
+               [isNew]="form.id === 0"
+               (save)="onFormSave($event)"/>
