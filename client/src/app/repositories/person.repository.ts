@@ -5,6 +5,7 @@ import {Filter} from '../models/filter.model';
 import {map, Observable} from 'rxjs';
 import {FilteredResponse} from '../models/entity/filtered-response';
 import {PersonForm} from '../models/forms/person.form';
+import {Color, Person} from '../models/entity/person.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,25 @@ export class PersonRepository {
 
   update(id: number, location: PersonForm): Observable<void> {
     return this.http.put<void>(`${this.api}/${id}`, location);
+  }
+
+  heightSum(): Observable<number> {
+    return this.http.get<number>(`${this.api}/height-sum`);
+  }
+
+  maxPerson(): Observable<Person> {
+    return this.http.get<Person>(`${this.api}/max-by-coords`);
+  }
+
+  countByWeight(weight: number): Observable<number> {
+    return this.http.get<number>(`${this.api}/count?weight=${weight}`);
+  }
+
+  countByEyeColor(eyeColor: Color): Observable<number> {
+    return this.http.get<number>(`${this.api}/count?eyeColor=${eyeColor}`);
+  }
+
+  proportionByEyeColor(eyeColor: Color): Observable<number> {
+    return this.http.get<number>(`${this.api}/proportion?eyeColor=${eyeColor}`);
   }
 }

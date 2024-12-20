@@ -1,1 +1,55 @@
 <nav-header/>
+
+<div class="page">
+  <div class="card-container">
+  <div class="card-container" style="width: 600px">
+    <div class="card">
+      <div><h3>Sum of all object's height</h3></div>
+      <input pInputText disabled [ngModel]="heightSum">
+      <div class="form-buttons">
+        <p-button (click)="calcHeightSum()" size="small">Calculate</p-button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div><h3>Count people by weight</h3></div>
+      <input pInputText [(ngModel)]="weight">
+      <div>Count: {{ countByWeight }}</div>
+      <div class="form-buttons">
+        <p-button (click)="calcCountByWeight()" size="small">Calculate</p-button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div><h3>Count people by Eye Color</h3></div>
+      <p-dropdown [options]="colorOptions"
+                  optionLabel="name"
+                  optionValue="id"
+                  [(ngModel)]="eyeColorForCount" />
+      <div>Count: {{ countByEyeColor}}</div>
+      <div class="form-buttons">
+        <p-button (click)="calcCountByEyeColor()" size="small">Calculate</p-button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div><h3>Proportion of people with Eye Color</h3></div>
+      <p-dropdown [options]="colorOptions"
+                  optionLabel="name"
+                  optionValue="id"
+                  [(ngModel)]="eyeColorForProportion" />
+      <div>Proportion: {{ proportionByEyeColor }}%</div>
+      <div class="form-buttons">
+        <p-button (click)="calcProportionByEyeColor()" size="small">Calculate</p-button>
+      </div>
+    </div>
+  </div>
+    <div class="card">
+      <div><h3>Person with max coords</h3></div>
+      <textarea pInputTextarea rows="27" cols="23" disabled [ngModel]="maxPerson"></textarea>
+      <div class="form-buttons">
+        <p-button (click)="calcMaxPerson()" size="small">Calculate</p-button>
+      </div>
+    </div>
+  </div>
+</div>
