@@ -7,6 +7,7 @@ import {LocationForm} from '../../models/forms/location.form';
 import {NgIf} from '@angular/common';
 import {CheckboxModule} from 'primeng/checkbox';
 import {Button} from 'primeng/button';
+import {LocationRepository} from '../../repositories/location.repository';
 
 @Component({
   selector: 'location-form',
@@ -29,6 +30,24 @@ export class LocationFormComponent {
 
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() save: EventEmitter<LocationForm> = new EventEmitter();
+
+  isNameUnique: boolean = true;
+  isUnameUniqueReqId?: any;
+
+  constructor(
+    private locationRepo: LocationRepository
+  ) {}
+
+  checkNameUniqueness(name: string): void {
+    if (this.isUnameUniqueReqId) {
+      clearTimeout(this.isUnameUniqueReqId);
+    }
+
+    this.isUnameUniqueReqId = setTimeout(
+      () => this.locationRepo.isNameUnique(name).subscribe((unique: boolean) => this.isNameUnique = unique),
+      500
+    );
+  }
 
   onClose() {
     this.visible = false;

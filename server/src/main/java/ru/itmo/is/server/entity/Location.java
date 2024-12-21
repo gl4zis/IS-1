@@ -11,6 +11,10 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @Entity
 @Getter
 @Setter
+@NamedQuery(name = "Location.isNameUnique", query =
+        "SELECT :name NOT IN (" +
+            "SELECT l.name FROM Location l " +
+        ")")
 public class Location extends AbstractEntity {
 
     @NotNull

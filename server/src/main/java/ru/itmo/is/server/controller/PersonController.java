@@ -74,4 +74,16 @@ public class PersonController {
     public Response getProportion(@QueryParam("eyeColor") @NotNull Color eyeColor) {
         return Response.ok(personService.getPeopleProportionByEyeColor(eyeColor)).build();
     }
+
+    @GET
+    @Path("/check-name-unique")
+    public Response checkNameUnique(@QueryParam("name") String name) {
+        return Response.ok(personService.isNameUnique(name)).build();
+    }
+
+    @GET
+    @Path("/check-passport-unique")
+    public Response checkPassportUnique(@QueryParam("passportId") String passportId) {
+        return Response.ok(personService.isPassportUnique(passportId)).build();
+    }
 }

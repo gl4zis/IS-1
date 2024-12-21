@@ -7,13 +7,16 @@
                required
                maxlength="312"
                [(ngModel)]="location.name"
-               #name="ngModel"/>
+               (input)="checkNameUniqueness(location.name)"
+               #name="ngModel"
+        />
         <label for="name">Name</label>
       </p-floatLabel>
       <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
         <div *ngIf="!name.value">Name cannot be empty</div>
         <div *ngIf="name.value.length > 312">Name cannot be longer 312 symbols</div>
       </div>
+      <div class="error" *ngIf="name.valid && !isNameUnique">This name already exists</div>
     </div>
   </div>
   <div class="input-row">
@@ -59,6 +62,7 @@
   </div>
   <div class="form-buttons">
     <p-button severity="danger" [outlined]="true" size="small" (click)="onClose()">Cancel</p-button>
-    <p-button size="small" (click)="onSave()" [disabled]="name.invalid || x.invalid || y.invalid">Save</p-button>
+    <p-button size="small" (click)="onSave()"
+              [disabled]="name.invalid || x.invalid || y.invalid || !isNameUnique">Save</p-button>
   </div>
 </p-dialog>

@@ -38,4 +38,8 @@ export class LocationRepository {
   getLinkedPeople(locationId: number): Observable<Selected[]> {
     return this.http.get<Selected[]>(`${this.api}/${locationId}/linked-people`);
   }
+
+  isNameUnique(name: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.api}/check-name-unique?name=${name}`);
+  }
 }

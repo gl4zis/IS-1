@@ -57,4 +57,10 @@ public class LocationController {
     public Response getForSelect() {
         return Response.ok(locationService.getForSelect()).build();
     }
+
+    @GET
+    @Path("/check-name-unique")
+    public Response checkNameUnique(@QueryParam("name") String name) {
+        return Response.ok(locationService.isNameUnique(name)).build();
+    }
 }

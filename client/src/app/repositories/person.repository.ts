@@ -63,4 +63,12 @@ export class PersonRepository {
   proportionByEyeColor(eyeColor: Color): Observable<number> {
     return this.http.get<number>(`${this.api}/proportion?eyeColor=${eyeColor}`);
   }
+
+  isNameUnique(name: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.api}/check-name-unique?name=${name}`);
+  }
+
+  isPassportUnique(passportId: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.api}/check-passport-unique?passportId=${passportId}`);
+  }
 }

@@ -44,7 +44,7 @@ export class ServerSideEntityTableComponent implements OnInit {
   @Output() needRefresh: EventEmitter<Filter> = new EventEmitter();
 
   nextRefreshWaitIdx?: any;
-  filtersUpdateIdx?: any;
+  filtersUpdateId?: any;
 
   filter: Filter = {
     paginator: {
@@ -81,11 +81,11 @@ export class ServerSideEntityTableComponent implements OnInit {
   }
 
   filtersOnInput(): void {
-    if (this.filtersUpdateIdx) {
-      clearTimeout(this.filtersUpdateIdx);
+    if (this.filtersUpdateId) {
+      clearTimeout(this.filtersUpdateId);
     }
 
-    this.filtersUpdateIdx = setTimeout(() => {
+    this.filtersUpdateId = setTimeout(() => {
       this.filter.paginator.page = 1;
       this.updateData();
     }, 500);

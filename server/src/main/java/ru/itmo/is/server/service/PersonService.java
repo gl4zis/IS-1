@@ -2,7 +2,6 @@ package ru.itmo.is.server.service;
 
 import jakarta.annotation.Nullable;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import ru.itmo.is.server.dto.request.PersonRequest;
@@ -19,15 +18,14 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
     }
 
     @Override
-    @Transactional
-    public void create(PersonRequest req) {
-        em.persist(toEntity(req, null));
-    }
-
-    @Override
-    @Transactional
-    public void update(int id, PersonRequest req) {
-        em.merge(toEntity(req, find(id)));
+    public void validate(Person person) {
+        if (!isNameUnique(person.getName())) {
+            throw new BadRequestException("Person with name " + person.getName() + " already exists");
+        }
+        if (!isPassportUnique(person.getPassportId())) {
+            throw new BadRequestException("Person with passport " + person.getPassportId() + " already exists");
+        }
+        em.persist(person);
     }
 
     public double getAllHeightSum() {
@@ -56,8 +54,9 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
         var count = em.createNamedQuery("Person.count", Long.class).getSingleResult();
         return 100 * countByColor / count;
     }
-    
-    private Person toEntity(PersonRequest req, @Nullable Person origin) {
+
+    @Override
+    protected Person toEntity(PersonRequest req, @Nullable Person origin) {
         var person = origin == null ? mapper.toEntity(req) : mapper.toEntity(req, origin);
 
         if (person.getCoordinates() != null) {
@@ -77,5 +76,17 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
         }
 
         return person;
+    }
+
+    public boolean isNameUnique(String name) {
+        return em.createNamedQuery("Person.isNameUnique", boolean.class)
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+
+    public boolean isPassportUnique(String passportId) {
+        return em.createNamedQuery("Person.isPassportUnique", boolean.class)
+                .setParameter("passportId", passportId)
+                .getSingleResult();
     }
 }

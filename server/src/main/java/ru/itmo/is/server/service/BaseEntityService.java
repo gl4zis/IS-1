@@ -1,5 +1,6 @@
 package ru.itmo.is.server.service;
 
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,7 +25,9 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
 
     @Transactional
     public void create(REQ req) {
-        em.persist(mapper.toEntity(req));
+        var e = toEntity(req, null);
+        validate(e);
+        em.persist(e);
     }
 
     @Transactional
@@ -35,7 +38,9 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
 
     @Transactional
     public void update(int id, REQ req) {
-        em.merge(mapper.toEntity(req, find(id)));
+        var e = toEntity(req, find(id));
+        validate(e);
+        em.merge(e);
     }
 
     public List<RES> getFiltered(FilteredRequest req) {
@@ -58,5 +63,13 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
         var e = em.find(eClass, id);
         if (e == null) throw new NotFoundException();
         return e;
+    }
+
+    public void validate(E entity) {
+        return;
+    }
+
+    protected E toEntity(REQ req, @Nullable E origin) {
+        return origin == null ? mapper.toEntity(req) : mapper.toEntity(req, origin);
     }
 }

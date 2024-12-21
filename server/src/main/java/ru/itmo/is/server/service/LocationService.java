@@ -19,6 +19,13 @@ public class LocationService extends BaseEntityService<Location, LocationRequest
     }
 
     @Override
+    public void validate(Location location) {
+        if (!isNameUnique(location.getName())) {
+            throw new BadRequestException("Location with name " + location.getName() + " already exists");
+        }
+    }
+
+    @Override
     @Transactional
     public void delete(int id) {
         var linkedPeopleIds = getLinkedPeople(id).stream().map(SelectResponse::getId).toList();
@@ -30,5 +37,11 @@ public class LocationService extends BaseEntityService<Location, LocationRequest
     public List<SelectResponse> getLinkedPeople(int id) {
         return em.createNamedQuery("Person.getLinkedToLocationId", SelectResponse.class)
                 .setParameter("locationId", id).getResultList();
+    }
+
+    public boolean isNameUnique(String name) {
+        return em.createNamedQuery("Location.isNameUnique", boolean.class)
+                .setParameter("name", name)
+                .getSingleResult();
     }
 }

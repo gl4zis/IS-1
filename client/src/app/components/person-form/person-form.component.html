@@ -8,12 +8,14 @@
                  required
                  maxlength="312"
                  [(ngModel)]="person.name"
+                 (input)="checkNameUniqueness(person.name)"
                  #name="ngModel"/>
           <label for="name">Name</label>
         </p-floatLabel>
         <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
           <div *ngIf="!name.value">Name cannot be empty</div>
         </div>
+        <div class="error" *ngIf="!isNameUnique && name.valid">This name already unique</div>
       </div>
     </div>
     <div class="input-row">
@@ -79,6 +81,7 @@
                required
                minlength="4"
                [(ngModel)]="person.passportId"
+               (input)="checkPassportUniqueness(person.passportId)"
                #passportId="ngModel"/>
         <div class="error" *ngIf="passportId.invalid && (passportId.touched || passportId.dirty)">
           <div *ngIf="!passportId.value; else passportIdLength">Passport Id cannot be empty</div>
@@ -86,6 +89,7 @@
             <div *ngIf="passportId.value.length < 4">Passport Id should have at least 4 symbols</div>
           </ng-template>
         </div>
+        <div class="error" *ngIf="!isPassportUnique && name.valid">This passport id already unique</div>
       </div>
       <div class="dropdown-container" style="width: 220px">
         <label for="nationality">Nationality</label>

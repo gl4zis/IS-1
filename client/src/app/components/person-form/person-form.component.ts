@@ -12,6 +12,7 @@ import {Color, Country} from '../../models/entity/person.model';
 import {Selected} from '../../models/util/selected.model';
 import {CoordRepository} from '../../repositories/coord.repository';
 import {LocationRepository} from '../../repositories/location.repository';
+import {PersonRepository} from '../../repositories/person.repository';
 
 @Component({
   selector: 'person-form',
@@ -41,9 +42,16 @@ export class PersonFormComponent implements OnInit {
   coordinatesOptions: Selected[] = [];
   locationOptions: Selected[] = [{ id: 0, name: '[null]' }];
 
+  isNameUnique: boolean = true;
+  isPassportUnique: boolean = true;
+
+  isUnameUniqueReqId?: any;
+  isPassportUniqueReqId?: any;
+
   constructor(
     private coordRepo: CoordRepository,
     private locationRepo: LocationRepository,
+    private personRepo: PersonRepository,
   ) {}
 
   ngOnInit() {
@@ -65,6 +73,28 @@ export class PersonFormComponent implements OnInit {
     }
     this.onClose();
     this.save.emit(this.person);
+  }
+
+  checkNameUniqueness(name: string): void {
+    if (this.isUnameUniqueReqId) {
+      clearTimeout(this.isUnameUniqueReqId);
+    }
+
+    this.isUnameUniqueReqId = setTimeout(
+      () => this.personRepo.isNameUnique(name).subscribe((unique: boolean) => this.isNameUnique = unique),
+      500
+    );
+  }
+
+  checkPassportUniqueness(passportId: string): void {
+    if (this.isPassportUniqueReqId) {
+      clearTimeout(this.isPassportUniqueReqId);
+    }
+
+    this.isPassportUniqueReqId = setTimeout(
+      () => this.personRepo.isPassportUnique(passportId).subscribe((unique: boolean) => this.isPassportUnique = unique),
+      500
+    );
   }
 
   protected readonly Math = Math;
