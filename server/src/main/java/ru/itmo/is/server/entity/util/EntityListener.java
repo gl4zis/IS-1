@@ -35,7 +35,6 @@ public class EntityListener {
     public void preRemove(Object obj) {
         if (obj instanceof AbstractEntity entity) {
             validateAccess(entity);
-
         }
     }
 

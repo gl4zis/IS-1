@@ -34,4 +34,8 @@ export class LocationRepository {
   getSelected(): Observable<Selected[]> {
     return this.http.get<Selected[]>(`${this.api}/select`);
   }
+
+  getLinkedPeople(locationId: number): Observable<Selected[]> {
+    return this.http.get<Selected[]>(`${this.api}/${locationId}/linked-people`);
+  }
 }

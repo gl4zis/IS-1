@@ -20,6 +20,7 @@ import {Coordinates} from '../../../models/entity/coordinates.model';
 import {CoordinatesFormComponent} from '../../coordinates-form/coordinates-form.component';
 import {CoordForm} from '../../../models/forms/coord.form';
 import {Entity} from '../../../models/entity/entity.model';
+import {Selected} from '../../../models/util/selected.model';
 
 @Component({
   selector: 'coordinates-page',
@@ -60,6 +61,31 @@ export class CoordinatesComponent {
   ) {}
 
   delete(id: number): void {
+    this.coordRepo.getLinkedPeople(id).subscribe((linked: Selected[]) => {
+      if (linked.length == 0) {
+        this.confirmDelete(id);
+      } else {
+        this.impossibleDeletionWarning(linked);
+      }
+    });
+  }
+
+  impossibleDeletionWarning(linked: Selected[]): void {
+    let linkedString = '';
+    linked.forEach(s => linkedString += `(${s.id}, ${s.name})<br/>`);
+
+    this.confirmation.confirm({
+      header: 'Impossible deletion',
+      message: `These people are linked to this entity.<br/>
+                Relink or delete them:<br/>
+                ${linkedString}`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ok',
+      rejectVisible: false
+    });
+  }
+
+  confirmDelete(id: number): void {
     this.confirmation.confirm({
       header: 'Delete confirmation',
       message: 'Are you sure you want to delete this entity?',

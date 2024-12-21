@@ -32,12 +32,6 @@ public class CoordController {
         return Response.status(Response.Status.CREATED).build();
     }
 
-    @GET
-    @Path("/{id}")
-    public Response getCoord(@PathParam("id") @NotNull Integer id) {
-        return Response.ok(coordService.get(id)).build();
-    }
-
     @PUT
     @Path("/{id}")
     public Response updateCoord(@PathParam("id") @NotNull Integer id, @Valid CoordRequest req) {

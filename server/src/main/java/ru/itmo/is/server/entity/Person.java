@@ -16,10 +16,10 @@ import ru.itmo.is.server.entity.util.AbstractEntity;
 @NamedQuery(name = "Person.countByWeight", query = "SELECT COUNT(p) FROM Person p WHERE p.weight = :weight")
 @NamedQuery(name = "Person.countByEyeColor", query = "SELECT COUNT(p) FROM Person p WHERE p.eyeColor = :eyeColor")
 @NamedQuery(name = "Person.getLinkedToCoordId", query =
-        "SELECT new ru.itmo.is.server.dto.response.PersonLinkResponse(p.id, p.name, p.coordinates.id, p.location.id) " +
+        "SELECT new ru.itmo.is.server.dto.response.SelectResponse(p.id, p.name,) " +
                 "FROM Person p WHERE p.coordinates.id = :coordId")
 @NamedQuery(name = "Person.getLinkedToLocationId", query =
-        "SELECT new ru.itmo.is.server.dto.response.PersonLinkResponse(p.id, p.name, p.coordinates.id, p.location.id) " +
+        "SELECT new ru.itmo.is.server.dto.response.SelectResponse(p.id, p.name) " +
                 "FROM Person p WHERE p.location.id = :locationId")
 @NamedQuery(name = "Person.getHeightSum", query = "SELECT SUM(p.height) FROM Person p")
 @NamedQuery(name = "Person.findMaxByCoord", query =

@@ -7,13 +7,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.PersonRequest;
-import ru.itmo.is.server.dto.request.RelinkRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredPersonRequest;
 import ru.itmo.is.server.dto.response.FilteredResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
-
-import java.util.List;
 
 @Path("/person")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -34,12 +31,6 @@ public class PersonController {
     public Response createPerson(@Valid PersonRequest req) {
         personService.create(req);
         return Response.status(Response.Status.CREATED).build();
-    }
-
-    @GET
-    @Path("/{id}")
-    public Response getPerson(@PathParam("id") @NotNull Integer id) {
-        return Response.ok(personService.get(id)).build();
     }
 
     @PUT
@@ -82,12 +73,5 @@ public class PersonController {
     @Path("/proportion")
     public Response getProportion(@QueryParam("eyeColor") @NotNull Color eyeColor) {
         return Response.ok(personService.getPeopleProportionByEyeColor(eyeColor)).build();
-    }
-
-    @PUT
-    @Path("/relink")
-    public Response relink(@Valid @NotNull List<RelinkRequest> req) {
-        personService.relink(req);
-        return Response.ok().build();
     }
 }

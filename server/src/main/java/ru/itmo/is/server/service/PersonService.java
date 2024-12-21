@@ -6,14 +6,11 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import ru.itmo.is.server.dto.request.PersonRequest;
-import ru.itmo.is.server.dto.request.RelinkRequest;
 import ru.itmo.is.server.dto.response.PersonResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
-
-import java.util.List;
 
 @ApplicationScoped
 public class PersonService extends BaseEntityService<Person, PersonRequest, PersonResponse> {
@@ -58,23 +55,6 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
                 .setParameter("eyeColor", eyeColor).getSingleResult().floatValue();
         var count = em.createNamedQuery("Person.count", Long.class).getSingleResult();
         return 100 * countByColor / count;
-    }
-
-    @Transactional
-    public void relink(List<RelinkRequest> req) {
-        req.forEach(relink -> {
-            var p = find(relink.getPersonId());
-            var c = em.find(Coordinates.class, relink.getCoordId());
-            if (c == null) throw new NotFoundException("Coordinates not found");
-            p.setCoordinates(c);
-            p.setLocation(null);
-            if (relink.getLocationId() != null) {
-                var l = em.find(Location.class, relink.getLocationId());
-                if (l == null) throw new NotFoundException("Location not found");
-                p.setLocation(l);
-            }
-            em.merge(p);
-        });
     }
     
     private Person toEntity(PersonRequest req, @Nullable Person origin) {

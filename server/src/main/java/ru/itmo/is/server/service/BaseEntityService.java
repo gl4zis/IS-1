@@ -22,10 +22,6 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     protected EntityMapper<E, REQ, RES> mapper;
     private final Class<E> eClass;
 
-    public RES get(int id) {
-        return mapper.toDto(find(id));
-    }
-
     @Transactional
     public void create(REQ req) {
         em.persist(mapper.toEntity(req));

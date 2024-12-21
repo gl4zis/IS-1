@@ -34,4 +34,8 @@ export class CoordRepository {
   getSelected(): Observable<Selected[]> {
     return this.http.get<Selected[]>(`${this.api}/select`);
   }
+
+  getLinkedPeople(coordId: number): Observable<Selected[]> {
+    return this.http.get<Selected[]>(`${this.api}/${coordId}/linked-people`);
+  }
 }
