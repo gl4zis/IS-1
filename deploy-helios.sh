@@ -12,7 +12,7 @@ cd "$SERVER_PATH"
 gradle war
 
 cd "$CLIENT_PATH"
-ng build --base-href="/~s367370/is/browser/"
+ng build --base-href="/~s367370/is/"
 
 scp "$WAR_PATH" helios:~/wildfly-27/standalone/deployments
 scp -r "$FRONT_BUILD_PATH" helios:~/public_html/is
