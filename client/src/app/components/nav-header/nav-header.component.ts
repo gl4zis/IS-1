@@ -40,6 +40,11 @@ export class NavHeaderComponent implements OnInit {
         label: 'Special',
         url: '/special',
         icon: 'pi pi-lightbulb'
+      },
+      {
+        label: 'Import',
+        url: '/import',
+        icon: 'pi pi-file-import'
       }
     ];
     if (this.authService.isAdmin()) {

@@ -23,6 +23,7 @@ export class AuthGuard implements CanActivate {
       this.location.back();
       return false;
     }
+
     if (await this.authService.checkAuth()) {
       return true;
     } else {
