@@ -1,14 +1,14 @@
 DROP TABLE IF EXISTS person, location, coordinates, entity_history, abstract_entity, admin_bid, usr;
 
 CREATE TABLE admin_bid (
-	login varchar PRIMARY KEY,
-	password varchar NOT NULL
+   login varchar PRIMARY KEY,
+   password varchar NOT NULL
 );
 
 CREATE TABLE usr (
-	login varchar PRIMARY KEY,
-	password varchar NOT NULL,
-	role varchar NOT NULL -- can be only one of ['ADMIN', 'USER']
+    login varchar PRIMARY KEY,
+    password varchar NOT NULL,
+    role varchar NOT NULL -- can be only one of ['ADMIN', 'USER']
 );
 
 CREATE TABLE abstract_entity (
