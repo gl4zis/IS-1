@@ -2,10 +2,9 @@
 
 <div class="page">
   <div class="card-container">
-  <div class="card-container" style="width: 600px">
     <div class="card">
       <div><h3>Sum of all object's height</h3></div>
-      <input pInputText disabled [ngModel]="heightSum">
+      <div>Sum: {{ heightSum }}</div>
       <div class="form-buttons">
         <p-button (click)="calcHeightSum()" size="small">Calculate</p-button>
       </div>
@@ -21,7 +20,7 @@
     </div>
 
     <div class="card">
-      <div><h3>Count people by Eye Color</h3></div>
+      <div><h3>Count people by eyeColor</h3></div>
       <p-dropdown [options]="colorOptions"
                   optionLabel="name"
                   optionValue="id"
@@ -33,7 +32,7 @@
     </div>
 
     <div class="card">
-      <div><h3>Proportion of people with Eye Color</h3></div>
+      <div><h3>Proportion of people by eyeColor</h3></div>
       <p-dropdown [options]="colorOptions"
                   optionLabel="name"
                   optionValue="id"
@@ -43,10 +42,9 @@
         <p-button (click)="calcProportionByEyeColor()" size="small">Calculate</p-button>
       </div>
     </div>
-  </div>
     <div class="card">
       <div><h3>Person with max coords</h3></div>
-      <textarea pInputTextarea rows="27" cols="23" disabled [ngModel]="maxPerson"></textarea>
+      <textarea pInputTextarea rows="5" cols="23" disabled [ngModel]="maxPerson"></textarea>
       <div class="form-buttons">
         <p-button (click)="calcMaxPerson()" size="small">Calculate</p-button>
       </div>

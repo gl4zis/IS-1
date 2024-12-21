@@ -1,5 +1,5 @@
 <p-dialog [header]="isNew ? 'Create coordinates' : 'Edit coordinates'" [modal]="true" [(visible)]="visible" [closable]="false">
-  <div class="input">
+  <div class="input-row input">
     <p-floatLabel>
       <input pInputText
              id="x"
@@ -14,7 +14,7 @@
       <div *ngIf="Number(y.value) !== y.value">X should be an integer</div>
     </div>
   </div>
-  <div class="input">
+  <div class="input input-row">
     <p-floatLabel>
       <input pInputText
              id="y"
@@ -30,7 +30,7 @@
       <div *ngIf="Number(y.value) !== y.value">Y cannot be empty</div>
     </div>
   </div>
-  <div *ngIf="isNew" class="input center">
+  <div *ngIf="isNew" class="checkbox">
     <p-checkbox
       id="admin-access"
       [(ngModel)]="coordinates.adminAccess"

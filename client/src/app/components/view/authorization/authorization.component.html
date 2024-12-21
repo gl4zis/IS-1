@@ -2,53 +2,55 @@
   <p-card>
     <ng-template pTemplate="title">{{ isSignIn ? 'Sign In' : 'Sign Up' }}</ng-template>
     <div *ngIf="authService.checkLogIn()">
-      <div class="center">
+      <div class="center" style="margin-bottom: 20px">
         You are already authorized as '{{ authStorage.getLogin() }}'
       </div>
-      <div class="center input">
+      <div class="buttons">
         <p-button severity="danger" size="small" (click)="authService.logout()">Logout</p-button>
-        <p-button [link]="true" size="small" (click)="location.back()">Go back</p-button>
+        <p-button [link]="true" size="small" (click)="goToPerson()">Go back</p-button>
       </div>
     </div>
 
     <div *ngIf="!authService.checkLogIn()">
-      <div class="center" style="white-space: pre-line;">
+      <div class="center" style="white-space: pre-line">
         {{ isSignIn ? 'Doesn\'t' : 'Already '}} have an account?
       </div>
       <div class="center ref" (click)="changeForm()">{{ isSignIn ? 'Sign Up' : 'Sign In' }}</div>
 
-      <div class="input">
-        <p-floatLabel>
-          <input pInputText
-                 id="login"
-                 required
-                 minlength="4"
-                 [(ngModel)]="form.login"
-                 #login="ngModel"/>
-          <label for="login">Username</label>
-        </p-floatLabel>
-        <div class="error" *ngIf="login.invalid && (login.touched || login.dirty)">
-          Username should have at least 4 symbols
+      <div class="input-row">
+        <div class="input" style="width: 100%">
+          <p-floatLabel>
+            <input pInputText
+                   id="login"
+                   required
+                   minlength="4"
+                   [(ngModel)]="form.login"
+                   #login="ngModel"/>
+            <label for="login">Username</label>
+          </p-floatLabel>
+          <div class="error" *ngIf="login.invalid && (login.touched || login.dirty)">
+            Username should have at least 4 symbols
+          </div>
         </div>
       </div>
-
-      <div class="input">
-        <p-floatLabel>
-          <p-password id="password"
-                      [(ngModel)]="form.password"
-                      [toggleMask]="true"
-                      [feedback]="false"
-                      required
-                      minlength="6"
-                      #password="ngModel"/>
-          <label for="password">Password</label>
-        </p-floatLabel>
-        <div class="error" *ngIf="password.invalid && (password.touched || password.dirty)">
-          Password should have at least 6 symbols
+      <div class="input-row">
+        <div class="input">
+          <p-floatLabel>
+            <p-password id="password"
+                        [(ngModel)]="form.password"
+                        [toggleMask]="true"
+                        [feedback]="false"
+                        required
+                        minlength="6"
+                        #password="ngModel"/>
+            <label for="password">Password</label>
+          </p-floatLabel>
+          <div class="error" *ngIf="password.invalid && (password.touched || password.dirty)">
+            Password should have at least 6 symbols
+          </div>
         </div>
       </div>
-
-      <div *ngIf="!isSignIn" class="input center">
+      <div *ngIf="!isSignIn" class="checkbox">
         <p-checkbox
           id="admin-toggle"
           [(ngModel)]="isAdmin"

@@ -1,50 +1,56 @@
 <p-dialog [header]="isNew ? 'Create location' : 'Edit location'" [modal]="true" [(visible)]="visible" [closable]="false">
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="name"
-             required
-             maxlength="312"
-             [(ngModel)]="location.name"
-             #name="ngModel"/>
-      <label for="name">Name</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
-      <div *ngIf="!name.value">Name cannot be empty</div>
-      <div *ngIf="name.value.length > 312">Name cannot be longer 312 symbols</div>
+  <div class="input-row">
+    <div class="input">
+      <p-floatLabel>
+        <input pInputText
+               id="name"
+               required
+               maxlength="312"
+               [(ngModel)]="location.name"
+               #name="ngModel"/>
+        <label for="name">Name</label>
+      </p-floatLabel>
+      <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
+        <div *ngIf="!name.value">Name cannot be empty</div>
+        <div *ngIf="name.value.length > 312">Name cannot be longer 312 symbols</div>
+      </div>
     </div>
   </div>
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="x"
-             type="number"
-             required
-             pattern="\d*"
-             [(ngModel)]="location.x"
-             #x="ngModel"/>
-      <label for="x">X</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="x.invalid && (x.touched || x.dirty)">
-      <div *ngIf="Number(y.value) !== y.value">X should be an integer</div>
+  <div class="input-row">
+    <div class="input">
+      <p-floatLabel>
+        <input pInputText
+               id="x"
+               type="number"
+               required
+               pattern="\d*"
+               [(ngModel)]="location.x"
+               #x="ngModel"/>
+        <label for="x">X</label>
+      </p-floatLabel>
+      <div class="error" *ngIf="x.invalid && (x.touched || x.dirty)">
+        <div *ngIf="Number(y.value) !== y.value">X should be an integer</div>
+      </div>
     </div>
   </div>
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="y"
-             type="number"
-             required
-             min="-725"
-             [(ngModel)]="location.y"
-             #y="ngModel"/>
-      <label for="y">Y</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="y.invalid && (y.touched || y.dirty)">
-      <div *ngIf="Number(y.value) !== y.value">Y cannot be empty</div>
+  <div class="input-row">
+    <div class="input">
+      <p-floatLabel>
+        <input pInputText
+               id="y"
+               type="number"
+               required
+               min="-725"
+               [(ngModel)]="location.y"
+               #y="ngModel"/>
+        <label for="y">Y</label>
+      </p-floatLabel>
+      <div class="error" *ngIf="y.invalid && (y.touched || y.dirty)">
+        <div *ngIf="Number(y.value) !== y.value">Y cannot be empty</div>
+      </div>
     </div>
   </div>
-  <div *ngIf="isNew" class="input center">
+  <div *ngIf="isNew" class="checkbox">
     <p-checkbox
       id="admin-access"
       [(ngModel)]="location.adminAccess"

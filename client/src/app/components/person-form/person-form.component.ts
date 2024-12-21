@@ -6,7 +6,7 @@ import {FloatLabelModule} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {NgIf} from '@angular/common';
-import {PersonForm} from '../../models/forms/person.form';
+import {NULL_NATIONALITY, PersonForm} from '../../models/forms/person.form';
 import {DropdownModule} from 'primeng/dropdown';
 import {Color, Country} from '../../models/entity/person.model';
 import {Selected} from '../../models/util/selected.model';
@@ -36,10 +36,10 @@ export class PersonFormComponent implements OnInit {
   @Output() visibleChange: EventEmitter<boolean> = new EventEmitter();
   @Output() save: EventEmitter<PersonForm> = new EventEmitter();
 
-  colorOptions: { id: string; name: string }[] = Object.values(Color).map(c => ({ id: c, name: c }));
-  countryOptions: { id?: string; name: string }[] = [];
+  colorOptions: string[] = Object.values(Color);
+  countryOptions: string[] = [NULL_NATIONALITY].concat(Object.values(Country));
   coordinatesOptions: Selected[] = [];
-  locationOptions: Selected[] = [{ id: 0, name: '' }];
+  locationOptions: Selected[] = [{ id: 0, name: '[null]' }];
 
   constructor(
     private coordRepo: CoordRepository,
@@ -47,11 +47,6 @@ export class PersonFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.countryOptions.push({ id: undefined, name: '' });
-    Object.values(Country)
-      .map(c => ({ id: c, name: c }))
-      .forEach(c => this.countryOptions.push(c));
-
     this.coordRepo.getSelected().subscribe(resp => this.coordinatesOptions = resp);
     this.locationRepo.getSelected().subscribe(resp => resp.forEach(l => this.locationOptions.push(l)));
   }
@@ -62,6 +57,9 @@ export class PersonFormComponent implements OnInit {
   }
 
   onSave() {
+    if (this.person.nationality === NULL_NATIONALITY) {
+      this.person.nationality = undefined;
+    }
     if (this.person.locationId === 0) {
       this.person.locationId = undefined;
     }
@@ -69,10 +67,6 @@ export class PersonFormComponent implements OnInit {
     this.save.emit(this.person);
   }
 
-  isValid() {
-    return true;
-  }
-
-  protected readonly Color = Color;
   protected readonly Math = Math;
+  protected readonly Number = Number;
 }

@@ -1,13 +1,15 @@
 <nav-header/>
 
 <div class="page">
-  <entity-table [tableConfig]="TABLE_CONFIG"
-                [data]="data"
-                [count]="count"
-                (needRefresh)="loadData($event)"
-                (delete)="delete($event)"
-                (add)="add()"
-                (update)="edit($event)"/>
+  <div class="table-container">
+    <entity-table [tableConfig]="TABLE_CONFIG"
+                  [data]="data"
+                  [count]="count"
+                  (needRefresh)="loadData($event)"
+                  (delete)="delete($event)"
+                  (add)="add()"
+                  (update)="edit($event)"/>
+  </div>
 </div>
 
 <location-form [(visible)]="form.visible"

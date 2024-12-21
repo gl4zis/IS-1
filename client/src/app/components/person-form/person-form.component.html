@@ -1,118 +1,144 @@
 <p-dialog [header]="isNew ? 'Create person' : 'Edit person'" [modal]="true" [(visible)]="visible" [closable]="false">
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="name"
-             required
-             maxlength="312"
-             [(ngModel)]="person.name"
-             #name="ngModel"/>
-      <label for="name">Name</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
-      <div *ngIf="!name.value">Name cannot be empty</div>
+  <div style="width: 480px">
+    <div class="input-row">
+      <div class="input" style="width: 100%">
+        <p-floatLabel>
+          <input pInputText
+                 id="name"
+                 required
+                 maxlength="312"
+                 [(ngModel)]="person.name"
+                 #name="ngModel"/>
+          <label for="name">Name</label>
+        </p-floatLabel>
+        <div class="error" *ngIf="name.invalid && (name.touched || name.dirty)">
+          <div *ngIf="!name.value">Name cannot be empty</div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="input">
-    <p-dropdown
-      [options]="colorOptions"
-      [(ngModel)]="person.eyeColor"
-      optionLabel="name"
-      optionValue="id"
-      placeholder="Eye color"/>
-  </div>
-  <div class="input">
-    <p-dropdown
-      [options]="colorOptions"
-      [(ngModel)]="person.hairColor"
-      optionLabel="name"
-      optionValue="id"
-      placeholder="Hair color"/>
-  </div>
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="height"
-             required
-             type="number"
-             min="0"
-             [(ngModel)]="person.height"
-             #height="ngModel"/>
-      <label for="height">Height</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="height.invalid && (height.touched || height.dirty)">
-      <div *ngIf="!height.value">Height cannot be empty</div>
-      <div *ngIf="height.value <= 0">Height should be more than 0</div>
+    <div class="input-row">
+      <div class="dropdown-container" style="width: 220px">
+        <label for="eye-color">Eye color</label>
+        <p-dropdown
+          id="eye-color"
+          [style]="{width: '100%'}"
+          [options]="colorOptions"
+          [(ngModel)]="person.eyeColor"
+        />
+      </div>
+      <div class="dropdown-container" style="width: 220px">
+        <label for="hair-color">Hair color</label>
+        <p-dropdown
+          id="hair-color"
+          [style]="{width: '100%'}"
+          [options]="colorOptions"
+          [(ngModel)]="person.hairColor"
+        />
+      </div>
     </div>
-  </div>
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="weight"
-             required
-             type="number"
-             min="0"
-             pattern="\d+"
-             [(ngModel)]="person.weight"
-             #weight="ngModel"/>
-      <label for="weight">Weight</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="weight.invalid && (weight.touched || weight.dirty)">
-      <div *ngIf="!weight.value">Weight cannot be empty</div>
-      <div *ngIf="weight.value <= 0">Weight should be more than 0</div>
-      <div *ngIf="Math.floor(weight.value) !== weight.value">Weight should be integer</div>
+    <div class="input-row">
+      <div class="input" style="width: 220px">
+        <p-floatLabel>
+          <input pInputText
+                 id="height"
+                 required
+                 type="number"
+                 min="0.0001"
+                 [(ngModel)]="person.height"
+                 #height="ngModel"/>
+          <label for="height">Height</label>
+        </p-floatLabel>
+        <div class="error" *ngIf="height.invalid && (height.touched || height.dirty)">
+          <div *ngIf="height.value <= 0">Height should be more than 0</div>
+        </div>
+      </div>
+      <div class="input" style="width: 220px">
+        <p-floatLabel>
+          <input pInputText
+                 id="weight"
+                 required
+                 type="number"
+                 min="1"
+                 [(ngModel)]="person.weight"
+                 #weight="ngModel"/>
+          <label for="weight">Weight</label>
+        </p-floatLabel>
+        <div class="error" *ngIf="weight.invalid && (weight.touched || weight.dirty)">
+          <div *ngIf="Math.floor(weight.value) !== weight.value; else weightNegative">Weight should be an integer</div>
+          <ng-template #weightNegative>
+            <div *ngIf="Number(weight.value) <= 0">Weight should be more than 0</div>
+          </ng-template>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="input">
-    <p-floatLabel>
-      <input pInputText
-             id="passportId"
-             required
-             minlength="4"
-             [(ngModel)]="person.passportId"
-             #passportId="ngModel"/>
-      <label for="passportId">Passport Id</label>
-    </p-floatLabel>
-    <div class="error" *ngIf="passportId.invalid && (passportId.touched || passportId.dirty)">
-      <div *ngIf="!passportId.value">Passport Id cannot be empty</div>
-      <div *ngIf="passportId.value.length < 4">Passport Id should have at least 4 symbols</div>
+    <div class="input-row">
+      <div class="input" style="width: 220px">
+        <label for="passportId">Passport Id</label>
+        <input pInputText
+               id="passportId"
+               required
+               minlength="4"
+               [(ngModel)]="person.passportId"
+               #passportId="ngModel"/>
+        <div class="error" *ngIf="passportId.invalid && (passportId.touched || passportId.dirty)">
+          <div *ngIf="!passportId.value; else passportIdLength">Passport Id cannot be empty</div>
+          <ng-template #passportIdLength>
+            <div *ngIf="passportId.value.length < 4">Passport Id should have at least 4 symbols</div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="dropdown-container" style="width: 220px">
+        <label for="nationality">Nationality</label>
+        <p-dropdown
+          id="nationality"
+          [style]="{width: '100%'}"
+          [options]="countryOptions"
+          [(ngModel)]="person.nationality"
+        />
+      </div>
     </div>
-  </div>
-  <div class="input">
-    <p-dropdown
-      [options]="countryOptions"
-      [(ngModel)]="person.nationality"
-      optionLabel="name"
-      optionValue="id"
-      placeholder="Nationality"/>
-  </div>
-  <div class="input">
-    <p-dropdown
-      [options]="coordinatesOptions"
-      [(ngModel)]="person.coordId"
-      optionLabel="name"
-      optionValue="id"
-      placeholder="Coordinates"/>
-  </div>
-  <div class="input">
-    <p-dropdown
-      [options]="locationOptions"
-      [(ngModel)]="person.locationId"
-      optionLabel="name"
-      optionValue="id"
-      placeholder="Location"/>
-  </div>
-  <div *ngIf="isNew" class="input center">
-    <p-checkbox
-      id="admin-access"
-      [(ngModel)]="person.adminAccess"
-      [binary]="true"/>
-    <label for="admin-access" style="margin-left: 5px;">Access edit for admins?</label>
-  </div>
-  <div class="form-buttons">
-    <p-button severity="danger" [outlined]="true" size="small" (click)="onClose()">Cancel</p-button>
-    <p-button size="small" (click)="onSave()"
-              [disabled]="name.invalid || height.invalid || weight.invalid || passportId.invalid"
-    >Save</p-button>
+    <div class="input-row">
+      <div class="dropdown-container" style="width: 220px">
+        <label for="coordinates">Coordinates</label>
+        <p-dropdown
+          id="coordinates"
+          [style]="{width: '100%'}"
+          [options]="coordinatesOptions"
+          [(ngModel)]="person.coordId"
+          optionLabel="name"
+          optionValue="id"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="50"
+          appendTo="body"
+        />
+      </div>
+      <div class="dropdown-container" style="width: 220px">
+        <label for="location">Location</label>
+        <p-dropdown
+          id="location"
+          [style]="{width: '100%'}"
+          [options]="locationOptions"
+          [(ngModel)]="person.locationId"
+          optionLabel="name"
+          optionValue="id"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="50"
+          appendTo="body"
+        />
+      </div>
+    </div>
+    <div *ngIf="isNew" class="checkbox">
+      <p-checkbox
+        id="admin-access"
+        [(ngModel)]="person.adminAccess"
+        [binary]="true"/>
+      <label for="admin-access" style="margin-left: 5px">Allow access edit for admins?</label>
+    </div>
+    <div class="form-buttons">
+      <p-button severity="danger" [outlined]="true" (click)="onClose()" size="large">Cancel</p-button>
+      <p-button (click)="onSave()" size="large"
+                [disabled]="name.invalid || height.invalid || weight.invalid || passportId.invalid"
+      >Save</p-button>
+    </div>
   </div>
 </p-dialog>

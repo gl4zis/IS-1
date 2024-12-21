@@ -19,7 +19,13 @@ export class PersonRepository {
     return this.http.post<FilteredResponse>(`${this.api}/filtered`, filter).pipe(
       map((resp: FilteredResponse) => {
         return {
-          data: resp.data.map((row: any) => { return { ...row, locationId: row.location!.id, coordinatesId: row.coordinates.id }; }),
+          data: resp.data.map((row: any) => {
+            return {
+              ...row,
+              locationId: row.location ? row.location.id : undefined,
+              coordinatesId: row.coordinates.id
+            };
+          }),
           count: resp.count
         };
       }),

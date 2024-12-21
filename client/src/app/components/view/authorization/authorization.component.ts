@@ -13,6 +13,7 @@ import {RegisterReq} from '../../../models/auth/register.model';
 import {AuthService} from '../../../services/auth/auth.service';
 import {Role} from '../../../models/auth/role.model';
 import {AuthStorageService} from '../../../services/auth/auth-storage.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'authorization-page',
@@ -38,9 +39,9 @@ export class AuthorizationComponent {
   isAdmin = false;
 
   constructor(
-    public authService: AuthService,
-    public authStorage: AuthStorageService,
-    public location: Location
+    protected authService: AuthService,
+    protected authStorage: AuthStorageService,
+    private router: Router
   ) {
     this.form = {
       login: '',
@@ -65,5 +66,9 @@ export class AuthorizationComponent {
       login: '',
       password: ''
     }
+  }
+
+  goToPerson(): void {
+    this.router.navigate(['/person']);
   }
 }

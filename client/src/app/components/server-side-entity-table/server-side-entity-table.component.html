@@ -30,7 +30,7 @@
   <ng-template pTemplate="body" let-entity let-columns="columns">
     <tr [ngClass]="{'row-no-access': !entity.accessible}">
       <td *ngFor="let col of columns">{{ entity[col] }}</td>
-      <td>
+      <td style="padding: 0">
         <div style="min-width: 160px" *ngIf="entity.accessible" class="buttons">
           <p-button size="small" [outlined]="true"
                     [style]="{height: '25px'}"

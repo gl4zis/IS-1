@@ -51,7 +51,14 @@ export class SpecialComponent implements OnInit {
   }
 
   calcMaxPerson() {
-    this.personRepo.maxPerson().subscribe(p => this.maxPerson = JSON.stringify(p, null, 2));
+    this.personRepo.maxPerson().subscribe(p => {
+      const view = {
+        id: p.id,
+        name: p.name,
+        passport: p.passportId
+      };
+      this.maxPerson = JSON.stringify(view, null, 2)
+    });
   }
 
   calcCountByWeight() {
