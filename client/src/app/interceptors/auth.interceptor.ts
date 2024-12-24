@@ -32,7 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
           case 401: {
             this.authStorage.reset();
             this.toast.warn('Oops', 'Looks like you are unauthorized. Try to sign in');
-            this.router.navigate(['/auth'])
+            this.router.navigate(['auth'])
             break;
           }
           case 403: {

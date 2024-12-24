@@ -73,11 +73,11 @@ export class AuthService {
     this.storage.setLogin(login);
     this.storage.setToken(jwt.token);
     this.storage.setRole(jwt.role);
-    this.router.navigate(['/table']);
+    this.router.navigate(['table']);
   }
 
   private resetAuth(): void {
     this.storage.reset();
-    this.router.navigate(['/auth']);
+    this.router.navigate(['auth']);
   }
 }

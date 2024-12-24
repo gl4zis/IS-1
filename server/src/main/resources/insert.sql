@@ -3,6 +3,7 @@ DELETE FROM location;
 DELETE FROM coordinates;
 DELETE FROM entity_history;
 DELETE FROM abstract_entity;
+DELETE FROM file_import;
 DELETE FROM admin_bid;
 DELETE FROM usr;
 
@@ -41,13 +42,13 @@ INSERT INTO abstract_entity (created_by, created_at, admin_access) SELECT
     'user' || (floor(random() * 10) + 1),
     NOW(),
     floor(random() * 2)::int::bool
-FROM generate_series(1, 3000000) i;
+FROM generate_series(1, 300) i;
 
 INSERT INTO coordinates (id, x, y) SELECT
     i,
     floor(random() * 2000) - 1000,   -- random x value
     round((random() * 2000 - 725)::numeric, 2)      -- random y value, ensuring it is > -725
-FROM generate_series(1, 1000000) i;
+FROM generate_series(1, 100) i;
 
 
 -- Insert data into location table
@@ -56,7 +57,7 @@ INSERT INTO location (id, name, x, y) SELECT
   'Location ' || i,        -- name
   floor(random() * 2000) - 1000,   -- random x value
   round((random() * 2000 - 1000)::numeric, 2)
-FROM generate_series(1000001, 2000000) i;
+FROM generate_series(101, 200) i;
 
 -- Insert data into person table
 INSERT INTO person (id, eye_color, hair_color, height, name, nationality, passport_id, weight, coordinates_id, location_id) SELECT
@@ -85,6 +86,6 @@ INSERT INTO person (id, eye_color, hair_color, height, name, nationality, passpo
     END,            -- random nationality
     'P' || lpad(i::text, 7, '0'),  -- passport_id e.g., P0000001
     round((random() * 50 + 50)::numeric, 2),  -- weight between 50 kg and 100 kg
-    (SELECT id FROM coordinates ORDER BY random() LIMIT 1 OFFSET i - 2000001),  -- random coordinates_id from existing coordinates
-    (SELECT id FROM location ORDER BY random() LIMIT 1 OFFSET i - 2000001)  -- random location_id from existing locations
-FROM generate_series(2000001, 3000000) i;
+    (SELECT id FROM coordinates ORDER BY random() LIMIT 1 OFFSET i - 201),  -- random coordinates_id from existing coordinates
+    (SELECT id FROM location ORDER BY random() LIMIT 1 OFFSET i - 201)  -- random location_id from existing locations
+FROM generate_series(201, 300) i;

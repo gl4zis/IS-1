@@ -69,6 +69,6 @@ export class AuthorizationComponent {
   }
 
   goToPerson(): void {
-    this.router.navigate(['/person']);
+    this.router.navigate(['person']);
   }
 }

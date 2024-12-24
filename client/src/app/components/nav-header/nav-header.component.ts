@@ -4,6 +4,7 @@ import {MenuItem} from 'primeng/api';
 import {AuthService} from '../../services/auth/auth.service';
 import {AuthStorageService} from '../../services/auth/auth-storage.service';
 import {ProfileButtonComponent} from '../profile-button/profile-button.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'nav-header',
@@ -17,40 +18,43 @@ import {ProfileButtonComponent} from '../profile-button/profile-button.component
 export class NavHeaderComponent implements OnInit {
   pages?: MenuItem[];
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.pages = [
       {
         label: 'Person',
-        url: '/person',
+        command: () => this.router.navigate(['person']),
         icon: 'pi pi-face-smile'
       },
       {
         label: 'Location',
-        url: '/location',
+        command: () => this.router.navigate(['location']),
         icon: 'pi pi-globe'
       },
       {
         label: 'Coordinates',
-        url: '/coordinates',
+        command: () => this.router.navigate(['coordinates']),
         icon: 'pi pi-compass'
       },
       {
         label: 'Special',
-        url: '/special',
+        command: () => this.router.navigate(['special']),
         icon: 'pi pi-lightbulb'
       },
       {
         label: 'Import',
-        url: '/import',
+        command: () => this.router.navigate(['import']),
         icon: 'pi pi-file-import'
       }
     ];
     if (this.authService.isAdmin()) {
       this.pages.push({
         label: 'Admin',
-        url: '/admin',
+        command: () => this.router.navigate(['admin']),
         icon: 'pi pi-lock'
       });
     }
