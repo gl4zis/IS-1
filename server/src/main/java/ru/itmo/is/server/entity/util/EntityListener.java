@@ -1,6 +1,6 @@
 package ru.itmo.is.server.entity.util;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.*;
 import jakarta.ws.rs.ForbiddenException;
@@ -8,7 +8,7 @@ import ru.itmo.is.server.web.ActiveUserHolder;
 
 import java.time.LocalDateTime;
 
-@RequestScoped
+@ApplicationScoped
 public class EntityListener {
     @PersistenceContext
     private EntityManager em;
@@ -18,7 +18,7 @@ public class EntityListener {
     @PrePersist
     public void prePersist(Object obj) {
         if (obj instanceof AbstractEntity entity) {
-            entity.setCreatedBy(userHolder.get());
+            if (userHolder.get() != null) entity.setCreatedBy(userHolder.get());
             entity.setCreatedAt(LocalDateTime.now());
         }
     }

@@ -7,7 +7,7 @@ import lombok.ToString;
 import ru.itmo.is.server.entity.Coordinates;
 import ru.itmo.is.server.entity.Location;
 import ru.itmo.is.server.entity.Person;
-import ru.itmo.is.server.entity.util.AbstractEntity;
+import ru.itmo.is.server.entity.file.FileImport;
 import ru.itmo.is.server.validation.ValidFilteredRequest;
 
 import java.util.Map;
@@ -18,12 +18,12 @@ import java.util.Map;
 @ValidFilteredRequest
 @ToString
 public abstract class FilteredRequest {
-    private final Class<? extends AbstractEntity> eClass;
+    private final Class<?> eClass;
     private Paginator paginator = new Paginator();
     private Sorter sorter = new Sorter();
     private Map<String, String> filters = Map.of();
 
-    public FilteredRequest(Class<? extends AbstractEntity> eClass) {
+    public FilteredRequest(Class<?> eClass) {
         this.eClass = eClass;
     }
 
@@ -35,6 +35,10 @@ public abstract class FilteredRequest {
         queryBuilder.append(" ").append(sorter.toSQL())
                 .append(" ").append(paginator.toSQL());
         return queryBuilder.toString();
+    }
+
+    public void addCustomFilter(String key, String substringKey) {
+        filters.put(key, substringKey);
     }
 
     public static void filtersToJPQL(Map<String, String> filters, StringBuilder builder) {
@@ -67,6 +71,12 @@ public abstract class FilteredRequest {
     public static class FilteredPersonRequest extends FilteredRequest {
         public FilteredPersonRequest() {
             super(Person.class);
+        }
+    }
+
+    public static class FilteredImportRequest extends FilteredRequest {
+        public FilteredImportRequest() {
+            super(FileImport.class);
         }
     }
 }

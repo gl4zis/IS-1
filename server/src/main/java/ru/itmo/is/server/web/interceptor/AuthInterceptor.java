@@ -10,11 +10,16 @@ import ru.itmo.is.server.exception.UnauthorizedException;
 import ru.itmo.is.server.service.AuthService;
 import ru.itmo.is.server.web.ActiveUserHolder;
 
+import java.util.Set;
+
 @Provider
 @Log4j2
 public class AuthInterceptor implements ContainerRequestFilter {
     private static final String AUTH_HEADER = "Authorization";
     private static final String AUTH_TYPE = "Bearer";
+    private static final Set<String> EXCLUDE_AUTH_PATH_PREFIXES = Set.of(
+            "/auth/login", "/auth/register", "/file/download"
+    );
 
     @Inject
     private ActiveUserHolder activeUser;
@@ -27,7 +32,7 @@ public class AuthInterceptor implements ContainerRequestFilter {
         var method = context.getMethod();
         log.info("Accepted {} {}", method, path);
 
-        if (!path.startsWith("/auth/login") && !path.startsWith("/auth/register")) {
+        if (EXCLUDE_AUTH_PATH_PREFIXES.stream().noneMatch(path::startsWith)) {
             authIntercept(context);
             if (path.startsWith("/admin") && !activeUser.isAdmin())
                 throw new ForbiddenException("Permission denied");

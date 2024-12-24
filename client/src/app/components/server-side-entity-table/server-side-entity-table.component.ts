@@ -35,11 +35,11 @@ export interface TableConfig {
 })
 export class ServerSideEntityTableComponent implements OnInit {
   @Input() tableConfig!: TableConfig;
-  @Input() data!: Entity[];
+  @Input() data!: any[];
   @Input() count!: number;
+  @Input() addButtons: boolean = true;
 
-  @Output() update: EventEmitter<Entity> = new EventEmitter();
-  @Output() add: EventEmitter<void> = new EventEmitter();
+  @Output() update: EventEmitter<any> = new EventEmitter();
   @Output() delete: EventEmitter<number> = new EventEmitter();
   @Output() needRefresh: EventEmitter<Filter> = new EventEmitter();
 

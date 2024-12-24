@@ -16,11 +16,8 @@ CREATE TABLE abstract_entity (
     created_by varchar NOT NULL,
     created_at timestamp with time zone NOT NULL,
     admin_access bool NOT NULL DEFAULT false,
-    removed_by varchar,
-    removed_at timestamp with time zone,
 
-    CONSTRAINT fk_created FOREIGN KEY (created_by) REFERENCES usr (login),
-    CONSTRAINT fk_removed FOREIGN KEY (removed_by) REFERENCES usr (login)
+    CONSTRAINT fk_created FOREIGN KEY (created_by) REFERENCES usr (login)
 );
 
 CREATE TABLE entity_history (
@@ -65,4 +62,18 @@ CREATE TABLE person (
     CONSTRAINT fk_person_id FOREIGN KEY (id) REFERENCES abstract_entity (id),
     CONSTRAINT fk_location FOREIGN KEY (location_id) REFERENCES location (id) ON DELETE SET NULL,
     CONSTRAINT fk_coordinates FOREIGN KEY (coordinates_id) REFERENCES coordinates (id)
+);
+
+CREATE TABLE file_import (
+    id bigserial PRIMARY KEY,
+    file_name varchar NOT NULL,
+    created_by varchar NOT NULL,
+    status varchar NOT NULL,
+    inserted_people int,
+    inserted_coordinates int,
+    inserted_locations int,
+    download_key varchar,
+
+    CONSTRAINT fk_import_created FOREIGN KEY (created_by) REFERENCES usr (login),
+    CONSTRAINT unique_download_key UNIQUE (download_key)
 );

@@ -10,6 +10,7 @@ import ru.itmo.is.server.dto.request.LocationRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredLocationRequest;
 import ru.itmo.is.server.dto.response.FilteredResponse;
 import ru.itmo.is.server.service.LocationService;
+import ru.itmo.is.server.validation.entity.LocationValidator;
 
 @Path("/location")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -17,6 +18,8 @@ import ru.itmo.is.server.service.LocationService;
 public class LocationController {
     @Inject
     private LocationService locationService;
+    @Inject
+    private LocationValidator locationValidator;
 
     @POST
     @Path("/filtered")
@@ -61,6 +64,6 @@ public class LocationController {
     @GET
     @Path("/check-name-unique")
     public Response checkNameUnique(@QueryParam("name") String name) {
-        return Response.ok(locationService.isNameUnique(name)).build();
+        return Response.ok(locationValidator.isNameUnique(name)).build();
     }
 }

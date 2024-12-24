@@ -1,2 +1,26 @@
 <nav-header/>
 
+<div class="page">
+  <div class="table-container">
+    <div class="table-header">
+      <p-fileUpload
+        name="file"
+        mode="basic"
+        chooseIcon="pi pi-upload"
+        chooseLabel="Browse"
+        [url]="uploadLink()"
+        accept=".csv"
+        [multiple]="false"
+        (onSelect)="onFileSelect($event)"
+        (onUpload)="onFileUpload()">
+      </p-fileUpload>
+    </div>
+    <entity-table
+      [tableConfig]="TABLE_CONFIG"
+      [data]="data"
+      [count]="count"
+      [addButtons]="false"
+      (needRefresh)="loadData($event)"
+    />
+  </div>
+</div>

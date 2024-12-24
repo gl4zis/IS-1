@@ -18,7 +18,8 @@ public class FilteredRequestValidator implements ConstraintValidator<ValidFilter
     // Костыль жесткий, но времени нет
     private static final Map<String, String> MAPPING_FIELDS = Map.of(
             "locationId", "location.id",
-            "coordinatesId", "coordinates.id"
+            "coordinatesId", "coordinates.id",
+            "createdBy", "created_by.login"
     );
 
     @Override

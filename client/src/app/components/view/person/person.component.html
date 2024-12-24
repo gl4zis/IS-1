@@ -2,12 +2,14 @@
 
 <div class="page">
   <div class="table-container">
+    <div class="table-header">
+      <p-button (click)="add()">Add new</p-button>
+    </div>
     <entity-table [tableConfig]="TABLE_CONFIG"
                   [data]="data"
                   [count]="count"
                   (needRefresh)="loadData($event)"
                   (delete)="delete($event)"
-                  (add)="add()"
                   (update)="edit($event)"/>
   </div>
 </div>

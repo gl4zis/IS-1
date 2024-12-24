@@ -11,6 +11,7 @@ import ru.itmo.is.server.dto.request.filter.FilteredRequest;
 import ru.itmo.is.server.dto.response.SelectResponse;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 import ru.itmo.is.server.mapper.EntityMapper;
+import ru.itmo.is.server.validation.entity.EntityValidator;
 
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,14 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     protected EntityManager em;
     @Inject
     protected EntityMapper<E, REQ, RES> mapper;
+    @Inject
+    protected EntityValidator<E> validator;
     private final Class<E> eClass;
 
     @Transactional
     public void create(REQ req) {
         var e = toEntity(req, null);
-        validate(e);
+        validator.validate(e);
         em.persist(e);
     }
 
@@ -39,7 +42,7 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     @Transactional
     public void update(int id, REQ req) {
         var e = toEntity(req, find(id));
-        validate(e);
+        validator.validate(e);
         em.merge(e);
     }
 
@@ -63,10 +66,6 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
         var e = em.find(eClass, id);
         if (e == null) throw new NotFoundException();
         return e;
-    }
-
-    public void validate(E entity) {
-        return;
     }
 
     protected E toEntity(REQ req, @Nullable E origin) {

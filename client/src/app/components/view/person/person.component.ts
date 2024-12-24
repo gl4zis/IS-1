@@ -14,6 +14,7 @@ import {Person} from '../../../models/entity/person.model';
 import {PersonFormComponent} from '../../person-form/person-form.component';
 import {PersonForm} from '../../../models/forms/person.form';
 import {Entity} from '../../../models/entity/entity.model';
+import {Button} from 'primeng/button';
 
 @Component({
   selector: 'person-page',
@@ -21,7 +22,8 @@ import {Entity} from '../../../models/entity/entity.model';
   imports: [
     NavHeaderComponent,
     ServerSideEntityTableComponent,
-    PersonFormComponent
+    PersonFormComponent,
+    Button
   ],
   templateUrl: './person.component.html'
 })

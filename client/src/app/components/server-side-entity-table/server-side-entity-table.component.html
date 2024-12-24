@@ -1,6 +1,3 @@
-<div class="table-header">
-  <p-button (click)="add.emit()">Add new</p-button>
-</div>
 <p-table [value]="data"
          [columns]="tableConfig.columns"
          styleClass="p-datatable-gridlines p-datatable-sm"
@@ -18,19 +15,19 @@
       <th *ngFor="let col of columns" [pSortableColumn]="col" style="width: 10%">
         {{ col }} <p-sortIcon [field]="col"/>
       </th>
-      <th></th>
+      <th *ngIf="addButtons"></th>
     </tr>
     <tr>
       <th *ngFor="let col of columns">
         <input style="height: 34px" pInputText [(ngModel)]="filter.filters[col]" (input)="filtersOnInput()"/>
       </th>
-      <th style="width: 10%"></th>
+      <th *ngIf="addButtons" style="width: 10%"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-entity let-columns="columns">
     <tr [ngClass]="{'row-no-access': !entity.accessible}">
-      <td *ngFor="let col of columns">{{ entity[col] }}</td>
-      <td style="padding: 0">
+      <td *ngFor="let col of columns" [innerHTML]="entity[col]"></td>
+      <td *ngIf="addButtons" style="padding: 0">
         <div style="min-width: 160px" *ngIf="entity.accessible" class="buttons">
           <p-button size="small" [outlined]="true"
                     [style]="{height: '25px'}"

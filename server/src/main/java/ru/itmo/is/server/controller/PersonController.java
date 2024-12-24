@@ -11,6 +11,7 @@ import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredPersonReques
 import ru.itmo.is.server.dto.response.FilteredResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
+import ru.itmo.is.server.validation.entity.PersonValidator;
 
 @Path("/person")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -18,6 +19,8 @@ import ru.itmo.is.server.service.PersonService;
 public class PersonController {
     @Inject
     private PersonService personService;
+    @Inject
+    private PersonValidator personValidator;
 
     @POST
     @Path("/filtered")
@@ -78,12 +81,12 @@ public class PersonController {
     @GET
     @Path("/check-name-unique")
     public Response checkNameUnique(@QueryParam("name") String name) {
-        return Response.ok(personService.isNameUnique(name)).build();
+        return Response.ok(personValidator.isNameUnique(name)).build();
     }
 
     @GET
     @Path("/check-passport-unique")
     public Response checkPassportUnique(@QueryParam("passportId") String passportId) {
-        return Response.ok(personService.isPassportUnique(passportId)).build();
+        return Response.ok(personValidator.isPassportUnique(passportId)).build();
     }
 }

@@ -17,17 +17,6 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
         super(Person.class);
     }
 
-    @Override
-    public void validate(Person person) {
-        if (!isNameUnique(person.getName())) {
-            throw new BadRequestException("Person with name " + person.getName() + " already exists");
-        }
-        if (!isPassportUnique(person.getPassportId())) {
-            throw new BadRequestException("Person with passport " + person.getPassportId() + " already exists");
-        }
-        em.persist(person);
-    }
-
     public double getAllHeightSum() {
         return em.createNamedQuery("Person.getHeightSum", Double.class).getSingleResult();
     }
@@ -76,17 +65,5 @@ public class PersonService extends BaseEntityService<Person, PersonRequest, Pers
         }
 
         return person;
-    }
-
-    public boolean isNameUnique(String name) {
-        return em.createNamedQuery("Person.isNameUnique", boolean.class)
-                .setParameter("name", name)
-                .getSingleResult();
-    }
-
-    public boolean isPassportUnique(String passportId) {
-        return em.createNamedQuery("Person.isPassportUnique", boolean.class)
-                .setParameter("passportId", passportId)
-                .getSingleResult();
     }
 }

@@ -26,6 +26,18 @@ public class AppProps {
     }
 
     public String getAccessKey() {
-        return properties.getProperty("jwt.access.key");
+        return get("jwt.access.key");
+    }
+
+    public String getFileStoragePath() {
+        return get("file.storage.path");
+    }
+
+    public int getImportThreadsCount() {
+        return Integer.parseInt(get("import.threads.count"));
+    }
+
+    public String get(String key) {
+        return properties.getProperty(key);
     }
 }

@@ -22,11 +22,13 @@ tasks.withType(JavaCompile) {
 
 dependencies {
   // jakarta
+  compileOnly 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
   compileOnly 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
   compileOnly 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
   implementation 'jakarta.transaction:jakarta.transaction-api:2.0.1'
-  compileOnly 'jakarta.websocket:jakarta.websocket-api:2.2.0'
-  compileOnly 'jakarta.websocket:jakarta.websocket-client-api:2.2.0'
+  // for import files
+  implementation 'org.jboss.resteasy:resteasy-multipart-provider:2.2.0.GA'
+  implementation 'com.opencsv:opencsv:5.9'
   // jackson
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
   // hibernate
@@ -43,6 +45,8 @@ dependencies {
   // mapper
   implementation 'org.mapstruct:mapstruct:1.6.3'
   annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+  // utils
+  implementation 'org.apache.commons:commons-lang3:3.17.0'
 }
 
 test {
