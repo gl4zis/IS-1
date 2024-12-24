@@ -31,9 +31,9 @@ public class FileController {
         var fileO = fileService.getFile(key);
         if (fileO.isPresent()) {
             var file = fileO.get();
-            Response.ResponseBuilder response = Response.ok(file.file());
-            response.header("Content-Disposition", "attachment; filename=\"" + file.name() + "\"");
-            return response.build();
+            return Response.ok(file.data(), MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", "attachment; filename=\"" + file.name() + "\"")
+                    .build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

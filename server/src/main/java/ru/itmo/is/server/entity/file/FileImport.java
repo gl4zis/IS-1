@@ -1,5 +1,6 @@
 package ru.itmo.is.server.entity.file;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -11,13 +12,8 @@ import ru.itmo.is.server.entity.security.User;
 @Getter
 @Setter
 @SequenceGenerator(name = "fileImportSeq", sequenceName = "file_import_id_seq", allocationSize = 1)
-@NamedQuery(name = "FileImport.isKeyUnique", query =
-    "SELECT :key NOT IN (" +
-        "SELECT fi.downloadKey FROM FileImport fi " +
-        "WHERE fi.downloadKey IS NOT NULL" +
-    ")")
 @NamedQuery(name = "FileImport.getNameByKey", query = "SELECT fi.fileName FROM FileImport fi WHERE fi.downloadKey = :key")
-@NamedQuery(name = "FileImport.count", query = "SELECT COUNT(fi) FROM FileImport fi")
+@NamedQuery(name = "FileImport.count", query = "SELECT COUNT(fi) FROM FileImport fi WHERE fi.createdBy = :owner")
 public class FileImport {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fileImportSeq")
@@ -62,13 +58,19 @@ public class FileImport {
     private void noInsert(ImportStatus status) {
         this.downloadKey = null;
         this.status = status;
-        addCounter(new InsertCounter());
+        addCounter(null);
     }
 
-    private void addCounter(InsertCounter counter) {
-        this.insertedPeople = counter.getInsertedPeople();
-        this.insertedCoordinates = counter.getInsertedCoordinates();
-        this.insertedLocations = counter.getInsertedLocation();
+    private void addCounter(@Nullable  InsertCounter counter) {
+        if (counter == null) {
+            this.insertedPeople = null;
+            this.insertedCoordinates = null;
+            this.insertedLocations = null;
+        } else {
+            this.insertedPeople = counter.getInsertedPeople();
+            this.insertedCoordinates = counter.getInsertedCoordinates();
+            this.insertedLocations = counter.getInsertedLocation();
+        }
     }
 
     public static FileImport of(String fileName, User createdBy) {

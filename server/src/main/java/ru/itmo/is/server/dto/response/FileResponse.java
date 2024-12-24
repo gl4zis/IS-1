@@ -1,6 +1,6 @@
 package ru.itmo.is.server.dto.response;
 
-import java.io.File;
+import java.io.InputStream;
 
-public record FileResponse(String name, File file) {
+public record FileResponse(String name, InputStream data) {
 }

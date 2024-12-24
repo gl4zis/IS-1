@@ -25,9 +25,8 @@ import ru.itmo.is.server.worker.ImportWorker;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -45,23 +44,27 @@ public class FileService {
     private FileStorage fileStorage;
     @EJB
     private ImportWorker importer;
-    private ExecutorService executor;
+    private ExecutorService importExecutor;
 
     @PostConstruct
     private void init() {
-        this.executor = Executors.newFixedThreadPool(props.getImportThreadsCount());
+        this.importExecutor = Executors.newFixedThreadPool(props.getImportThreadsCount());
     }
 
     public Optional<FileResponse> getFile(String key) {
-        Path path = fileStorage.getFile(key);
-        List<String> names = em.createNamedQuery("FileImport.getNameByKey", String.class)
-                .setParameter("key", key)
-                .getResultList();
-        FileResponse resp = null;
-        if (Files.exists(path) && names.size() == 1) {
-            resp = new FileResponse(names.get(0), path.toFile());
+        try {
+            InputStream data = fileStorage.getFile(key);
+            List<String> names = em.createNamedQuery("FileImport.getNameByKey", String.class)
+                    .setParameter("key", key)
+                    .getResultList();
+            FileResponse resp = null;
+            if (names.size() == 1) {
+                resp = new FileResponse(names.get(0), data);
+            }
+            return Optional.ofNullable(resp);
+        } catch (IOException e) {
+            return Optional.empty();
         }
-        return Optional.ofNullable(resp);
     }
 
     public List<FileImport> getFileImports(FilteredRequest filter) {
@@ -72,7 +75,9 @@ public class FileService {
     }
 
     public int getHistoryCount() {
-        return em.createNamedQuery("FileImport.count", Long.class).getSingleResult().intValue();
+        return em.createNamedQuery("FileImport.count", Long.class)
+                .setParameter("owner", activeUser.get().getLogin())
+                .getSingleResult().intValue();
     }
 
     @Transactional
@@ -87,8 +92,7 @@ public class FileService {
         User user = activeUser.get();
         var fi = FileImport.of(filename, user);
         em.persist(fi);
-        em.flush();
-        executor.submit(() -> importer.executeSafe(user, data, fi));
+        importExecutor.submit(() -> importer.execute(user, data, fi));
     }
 
     public static List<ImportCsvRow> parseCSV(byte[] data) throws IOException {

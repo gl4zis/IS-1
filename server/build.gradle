@@ -29,6 +29,8 @@ dependencies {
   // for import files
   implementation 'org.jboss.resteasy:resteasy-multipart-provider:2.2.0.GA'
   implementation 'com.opencsv:opencsv:5.9'
+  // MinIO
+  implementation 'io.minio:minio:8.5.14'
   // jackson
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
   // hibernate

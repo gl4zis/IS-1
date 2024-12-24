@@ -1,57 +1,68 @@
 package ru.itmo.is.server.storage;
 
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import ru.itmo.is.server.config.AppProps;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 
+@Log4j2
 @ApplicationScoped
 public class FileStorage {
     @PersistenceContext
     private EntityManager em;
     @Inject
     private AppProps props;
+    private MinioClient minioClient;
+
+    @PostConstruct
+    private void init() {
+        minioClient = MinioClient.builder()
+                .endpoint(String.format("http://%s:%d", props.getMinioHost(), props.getMinioPort()))
+                .credentials(props.getMinioUser(), props.getMinioPassword())
+                .build();
+    }
 
     public String saveFile(byte[] data) throws IOException {
-        String key = generateFileKey();
-        Path path = Paths.get(props.getFileStoragePath(), key);
-
-        try (OutputStream out = Files.newOutputStream(path)) {
-            out.write(data);
+        try {
+            String key = RandomStringUtils.random(8, true, true);
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(props.get("minio.bucket"))
+                            .object(key)
+                            .stream(new ByteArrayInputStream(data), data.length, -1)
+                            .contentType("text/plain")
+                            .build()
+            );
+            return key;
+        } catch (Exception e) {
+            log.error("Cannot save file caused by {}", e.getClass().getSimpleName());
+            throw new IOException(e);
         }
-        return key;
     }
 
-    public Path getFile(String key) {
-        return Paths.get(props.getFileStoragePath(), key);
-    }
-
-    // Костыль, зато быстро написано
-    private String generateFileKey() {
-        String key;
-        int attempts = 0;
-        int maxAttempts = 100;
-        do {
-            key = RandomStringUtils.random(8, true, true);
-            attempts++;
-            if (attempts > maxAttempts) {
-                throw new RuntimeException("Unable to generate a unique key after " + maxAttempts + " attempts");
-            }
-        } while (!isDownloadKeyUnique(key));
-        return key;
-    }
-
-    private boolean isDownloadKeyUnique(String key) {
-        return em.createNamedQuery("FileImport.isKeyUnique", boolean.class)
-                .setParameter("key", key)
-                .getSingleResult();
+    public InputStream getFile(String objectName) throws IOException {
+        try {
+            return minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(props.get("minio.bucket"))
+                            .object(objectName)
+                            .build()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Cannot get file caused by {}", e.getClass().getSimpleName());
+            throw new IOException(e);
+        }
     }
 }

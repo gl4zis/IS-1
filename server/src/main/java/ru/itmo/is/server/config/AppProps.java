@@ -37,6 +37,22 @@ public class AppProps {
         return Integer.parseInt(get("import.threads.count"));
     }
 
+    public String getMinioHost() {
+        return get("minio.host");
+    }
+
+    public int getMinioPort() {
+        return Integer.parseInt(get("minio.port"));
+    }
+
+    public String getMinioUser() {
+        return get("minio.user");
+    }
+
+    public String getMinioPassword() {
+        return get("minio.password");
+    }
+
     public String get(String key) {
         return properties.getProperty(key);
     }

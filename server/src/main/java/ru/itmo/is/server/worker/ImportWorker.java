@@ -1,10 +1,16 @@
 package ru.itmo.is.server.worker;
 
+import com.opencsv.exceptions.CsvException;
+import jakarta.annotation.Resource;
+import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionManagement;
+import jakarta.ejb.TransactionManagementType;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 import jakarta.validation.ValidationException;
 import lombok.extern.log4j.Log4j2;
 import ru.itmo.is.server.dto.request.file.ImportCsvRow;
@@ -22,9 +28,12 @@ import java.util.List;
 
 @Log4j2
 @Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class ImportWorker {
     @PersistenceContext
     private EntityManager em;
+    @Resource
+    private SessionContext context;
     @Inject
     private FileStorage fs;
     @Inject
@@ -34,32 +43,53 @@ public class ImportWorker {
     @Inject
     private EntityValidator<Coordinates> coordValidator;
 
-    public void executeSafe(User importer, byte[] data, FileImport fi) {
+    public void execute(User importer, byte[] data, FileImport fi) {
+        UserTransaction ut = context.getUserTransaction();
         try {
-            execute(importer, data, fi);
-            em.merge(fi);
-        } catch (Exception e) {
-            em.merge(fi);
-            log.error("Import task failed caused by {}", e.getClass().getSimpleName());
-        }
-    }
-
-    @Transactional
-    private void execute(User importer, byte[] data, FileImport fi) throws Exception {
-        try {
+            ut.begin();
             var counters = importEntities(FileService.parseCSV(data), importer);
             var downloadKey = fs.saveFile(data);
             fi.success(downloadKey, counters);
+            ut.commit();
         } catch (ValidationException e) {
+            rollback(ut);
+            defaultLog(e);
             fi.validationFailed();
-            throw e;
         } catch (Exception e) {
-            fi.insertFailed();
-            throw e;
+            rollback(ut);
+            defaultLog(e);
+            if (e.getCause() instanceof CsvException) {
+                fi.validationFailed();
+            } else {
+                fi.insertFailed();
+            }
+        } finally {
+            mergeFi(ut, fi);
         }
     }
 
-    @Transactional
+    private void defaultLog(Exception e) {
+        log.error("Import task failed caused by {}", e.getClass().getSimpleName());
+    }
+
+    private void rollback(UserTransaction ut) {
+        try {
+            ut.rollback();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void mergeFi(UserTransaction ut, FileImport fi) {
+        try {
+            ut.begin();
+            em.merge(fi);
+            ut.commit();
+        } catch (Exception e) {
+            rollback(ut);
+        }
+    }
+
     private InsertCounter importEntities(List<ImportCsvRow> imports, User importer) {
         InsertCounter counter = new InsertCounter();
         imports.forEach(row -> {
