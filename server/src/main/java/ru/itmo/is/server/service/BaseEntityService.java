@@ -7,12 +7,14 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest;
 import ru.itmo.is.server.dto.response.SelectResponse;
 import ru.itmo.is.server.entity.util.AbstractEntity;
 import ru.itmo.is.server.mapper.EntityMapper;
 import ru.itmo.is.server.validation.entity.EntityValidator;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +29,14 @@ public abstract class BaseEntityService<E extends AbstractEntity, REQ, RES> {
     private final Class<E> eClass;
 
     @Transactional
-    public void create(REQ req) {
+    public int create(REQ req) {
+        Session session = em.unwrap(Session.class);
+        session.doWork(connection -> connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE));
+
         var e = toEntity(req, null);
         validator.validate(e);
         em.persist(e);
+        return e.getId();
     }
 
     @Transactional

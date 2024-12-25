@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.PersonRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredPersonRequest;
 import ru.itmo.is.server.dto.response.FilteredResponse;
+import ru.itmo.is.server.dto.response.IdResponse;
 import ru.itmo.is.server.entity.Color;
 import ru.itmo.is.server.service.PersonService;
 import ru.itmo.is.server.validation.entity.PersonValidator;
@@ -32,8 +33,10 @@ public class PersonController {
 
     @POST
     public Response createPerson(@Valid PersonRequest req) {
-        personService.create(req);
-        return Response.status(Response.Status.CREATED).build();
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(new IdResponse(personService.create(req))
+                ).build();
     }
 
     @PUT

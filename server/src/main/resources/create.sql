@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS person, location, coordinates, entity_history, abstract_entity, admin_bid, usr;
+DROP TABLE IF EXISTS person, location, coordinates, entity_history, abstract_entity, admin_bid, file_import, usr;
 
 CREATE TABLE admin_bid (
    login varchar PRIMARY KEY,
@@ -27,7 +27,7 @@ CREATE TABLE entity_history (
     updated_at timestamp with time zone NOT NULL,
 
     CONSTRAINT fk_updated FOREIGN KEY (updated_by) REFERENCES usr (login),
-    CONSTRAINT fk_entity_history FOREIGN KEY (entity_id) REFERENCES abstract_entity (id)
+    CONSTRAINT fk_entity_history FOREIGN KEY (entity_id) REFERENCES abstract_entity (id) ON DELETE CASCADE
 );
 
 CREATE TABLE coordinates (
@@ -35,7 +35,7 @@ CREATE TABLE coordinates (
     x bigint NOT NULL,
     y double precision NOT NULL CHECK(y > -725),
 
-    CONSTRAINT fk_coord_id FOREIGN KEY (id) REFERENCES abstract_entity (id)
+    CONSTRAINT fk_coord_id FOREIGN KEY (id) REFERENCES abstract_entity (id) ON DELETE CASCADE
 );
 
 CREATE TABLE location (
@@ -44,7 +44,7 @@ CREATE TABLE location (
     x bigint NOT NULL,
     y double precision NOT NULL,
 
-    CONSTRAINT fk_location_id FOREIGN KEY (id) REFERENCES abstract_entity (id)
+    CONSTRAINT fk_location_id FOREIGN KEY (id) REFERENCES abstract_entity (id) ON DELETE CASCADE
 );
 
 CREATE TABLE person (

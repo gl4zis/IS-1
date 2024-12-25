@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.LocationRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredLocationRequest;
 import ru.itmo.is.server.dto.response.FilteredResponse;
+import ru.itmo.is.server.dto.response.IdResponse;
 import ru.itmo.is.server.service.LocationService;
 import ru.itmo.is.server.validation.entity.LocationValidator;
 
@@ -31,8 +32,10 @@ public class LocationController {
 
     @POST
     public Response createLocation(LocationRequest req) {
-        locationService.create(req);
-        return Response.status(Response.Status.CREATED).build();
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(new IdResponse(locationService.create(req))
+                ).build();
     }
 
     @PUT

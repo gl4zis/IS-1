@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import ru.itmo.is.server.dto.request.CoordRequest;
 import ru.itmo.is.server.dto.request.filter.FilteredRequest.FilteredCoordRequest;
 import ru.itmo.is.server.dto.response.FilteredResponse;
+import ru.itmo.is.server.dto.response.IdResponse;
 import ru.itmo.is.server.service.CoordService;
 
 @Path("/coord")
@@ -28,8 +29,10 @@ public class CoordController {
 
     @POST
     public Response createCoord(@Valid CoordRequest req) {
-        coordService.create(req);
-        return Response.status(Response.Status.CREATED).build();
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(new IdResponse(coordService.create(req))
+                ).build();
     }
 
     @PUT
